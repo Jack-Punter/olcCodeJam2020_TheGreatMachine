@@ -1,0 +1,27 @@
+The Great Machine Plan:
+	Black box style game,
+	Levels get more complicated
+	(story) Work towards figuring out what "The Great Machine" is,
+	(GamePlay) Duplicate the black box circuit?
+	
+Idea (circuits):
+	Start with simple Button/Switch input, LED output
+	on more complex levels, unlock more complex components, (signal generators, bus inputs (numbers))
+	Example levels:
+		Digital:
+		 - Simple Logic Gates
+		 - Progres onto adders, multipliers etc.
+		 - TGM (final level): 
+		Analog:
+		 - OpAmp circuits? (may be more complex)
+		 - Controllers?
+		 - TGM (final level): 
+
+
+
+we could do something similar (Simple ISA) for later levels of this game, but space/implementation might be very difficult
+although i was thinking adder/subtractor for a BlackBox challenge
+so 1 bit as a controll signal, 4-8 bit inputs
+another idea could be, (back to non-linear levels) when you complete a level (or maybe just the simpler ones) you unlock a component that is that level's circuit
+so if there is a multiplexer circuit, after completing that level, you get a multiplexer circuit
+that you can use to solve the other levels

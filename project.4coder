@@ -1,0 +1,35 @@
+version(1);
+project_name = "4coder custom";
+
+patterns = {
+    "*.c",
+    "*.cpp",
+    "*.h",
+    "*.m",
+    "*.mm",
+    "*.bat",
+    "*.sh",
+    "*.4coder",
+    "*.txt",
+	"*.ds",
+};
+blacklist_patterns = {
+    ".*",
+};
+load_paths_custom = {
+    {".\src"},
+    {".\data_desk_custom"},
+};
+load_paths = {
+    { load_paths_custom, .os = "win"  },
+    { load_paths_custom, .os = "linux"},
+    { load_paths_custom, .os = "mac"  },
+};
+
+command_list = {
+    { .name = "build",
+        .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,
+        .cmd = { {".\build.bat", .os ="win"  },},},
+};
+
+fkey_command[1] = "build";

@@ -1,0 +1,28 @@
+@StringArray
+LogicComponent :: enum {
+    LOGIC_XOR,
+    LOGIC_OR,
+    LOGIC_AND,
+    LOGIC_BUFFER,
+    LOGIC_XNOR,
+    LOGIC_NOR,
+    LOGIC_NAND,
+    LOGIC_NOT,
+    LOGIC_NONE,
+};
+
+@StringArray
+IoComponent :: enum{
+    IO_BIT,
+    IO_LED,
+    IO_NONE,
+};
+
+@StringArray
+ControlMode :: enum {
+	PLACE_COMPONENTS,
+	PLACE_CONNECTIONS,
+	INTERACT,
+	DELETE_TREES,
+	DELETE_NODES,
+}
