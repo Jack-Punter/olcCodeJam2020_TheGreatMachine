@@ -38,29 +38,27 @@ struct LogicCircuitNode : public CircuitNode {
     {
         if(Input[0]) {
             olc::vi2d leftCentre = pos + olc::vi2d{0, (int)SpriteSize.y};
-            olc::vi2d inputRightCentre = Input[0]->pos +
-                olc::vi2d{2 * (int)Input[0]->SpriteSize.x, (int)Input[0]->SpriteSize.y};
+            olc::vi2d inputConnectionPos = Input[0]->GetConnectionPoint(this);
             
             olc::vi2d leftUpperInput = leftCentre - olc::vi2d{0, (int)SpriteSize.y / 2};
             olc::vi2d leftLowerInput = leftCentre + olc::vi2d{0, (int)SpriteSize.y / 2};
             olc::Pixel lineColor = Input[0]->Evaluate(this) ? olc::YELLOW : olc::BLUE;
             if(type == LOGIC_BUFFER || type == LOGIC_NOT) {
-                pge->DrawLine(leftCentre, inputRightCentre, lineColor);
+                pge->DrawLine(leftCentre, inputConnectionPos, lineColor);
             } else {
-                pge->DrawLine(leftUpperInput, inputRightCentre, lineColor);
+                pge->DrawLine(leftUpperInput, inputConnectionPos, lineColor);
             }
             Input[0]->Draw(TintCol);
         }
         if(Input[1]) {
             olc::vi2d leftCentre = pos + olc::vi2d{0, (int)SpriteSize.y};
-            olc::vi2d inputRightCentre = Input[1]->pos +
-                olc::vi2d{2 * (int)Input[1]->SpriteSize.x, (int)Input[1]->SpriteSize.y};
+            olc::vi2d inputConnectionPos = Input[1]->GetConnectionPoint(this);
             
             olc::vi2d leftUpperInput = leftCentre - olc::vi2d{0, (int)SpriteSize.y / 2};
             olc::vi2d leftLowerInput = leftCentre + olc::vi2d{0, (int)SpriteSize.y / 2};
             
             olc::Pixel lineColor = Input[1]->Evaluate(this) ? olc::YELLOW : olc::BLUE;
-            pge->DrawLine(leftLowerInput, inputRightCentre, lineColor);
+            pge->DrawLine(leftLowerInput, inputConnectionPos, lineColor);
             Input[1]->Draw(TintCol);
         }
         CircuitNode::Draw(TintCol);

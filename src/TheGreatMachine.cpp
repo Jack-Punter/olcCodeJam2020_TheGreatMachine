@@ -15,7 +15,8 @@ inline void RemoveErase(Container* container, T value) {
 #include "CircuitEditor.h"
 #include "CircuitNode.h"
 #include "Level.h"
-#include "generated\LevelFullAdder.h"
+#include "generated\FullAdderLevel.h"
+
 #include <algorithm>
 
 class TheGreatMachine : public olc::PixelGameEngine

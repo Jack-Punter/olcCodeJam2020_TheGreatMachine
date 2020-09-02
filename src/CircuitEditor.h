@@ -78,7 +78,7 @@ struct CircuitEditor {
         {
             if(pge->GetMouse(0).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
-                if (node) {
+                if (node && node->SpriteIndex != (int)LOGIC_NONE) {
                     if(!FirstClick) {
                         FirstClick = node;
                     } else  {
@@ -116,7 +116,7 @@ struct CircuitEditor {
                 }
             }
         } else if (CurrentControlMode == DELETE_NODES) {
-            if (pge->GetMouse(0).bPressed) {
+            if (pge->GetMouse(0).bPressed && !pge->GetKey(olc::CTRL).bHeld) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
                 if(node && !node->IsStatic) {
                     std::vector<CircuitNode *> children = node->GetChildren();
@@ -124,20 +124,29 @@ struct CircuitEditor {
                     CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
                     
                     for(auto* c : children) {
+                        c->RemoveParent(node);
                         node->RemoveInput(c);
                     }
-                    
-                    if (pge->GetKey(olc::CTRL).bHeld) {
-                        // NOTE(jack): If Ctrl is pressed and the node is not a root, add it as a root
-                        // and remove it from its parents;
-                        if (std::find(std::begin(CircuitTrees), std::end(CircuitTrees), node) == std::end(CircuitTrees))
-                        {
-                            node->RemoveFromParents();
-                            CircuitTrees.push_back(node);
-                        }
-                    } else {
-                        RemoveErase(&CircuitTrees, node);
-                        delete node;
+                    RemoveErase(&CircuitTrees, node);
+                    delete node;
+                }
+            }
+            if (pge->GetMouse(0).bPressed && pge->GetKey(olc::CTRL).bHeld) {
+                CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
+                if(node) {
+                    std::vector<CircuitNode *> children = node->GetChildren();
+                    CircuitTrees.reserve(CircuitTrees.size() + children.size());
+                    CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
+                    for(auto* c : children) {
+                        c->RemoveParent(node);
+                        node->RemoveInput(c);
+                    }
+                    // NOTE(jack): If Ctrl is pressed and the node is not a root, add it as a root
+                    // and remove it from its parents;
+                    if (std::find(std::begin(CircuitTrees), std::end(CircuitTrees), node) == std::end(CircuitTrees))
+                    {
+                        node->RemoveFromParents();
+                        CircuitTrees.push_back(node);
                     }
                 }
             }

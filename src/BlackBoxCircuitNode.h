@@ -24,18 +24,23 @@ struct BlackBoxCircuitNode : public CircuitNode {
         RemoveErase(&Input, node);
     }
     
+    olc::vi2d GetConnectionPoint(CircuitNode *parent) override {
+        int ParentIndex = 0;
+        for(; parents[ParentIndex] != parent; ++ParentIndex);
+        return pos + olc::vi2d{2 * (int)SpriteSize.x, (int)((1 + ParentIndex) * (2 * SpriteSize.y / (1 + parents.size())))};
+    }
+    
     void Draw(olc::Pixel TintCol = olc::WHITE) override
     {
         int counter = 1;
         
         for (auto *node : Input) {
-            olc::vi2d inputRightCentre = node->pos +
-                olc::vi2d{2 * (int)node->SpriteSize.x, (int)node->SpriteSize.y};
+            olc::vi2d inputConnectPos = node->GetConnectionPoint(this);
             
             olc::vi2d currentInput = pos + olc::vi2d{0, (int)(counter * (2 * SpriteSize.y / (1 + Input.size())))};
             
             olc::Pixel lineColor = node->Evaluate(this) ? olc::YELLOW : olc::BLUE;
-            pge->DrawLine(currentInput, inputRightCentre, lineColor);
+            pge->DrawLine(currentInput, inputConnectPos, lineColor);
             
             node->Draw(TintCol);
             ++counter;

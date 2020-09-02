@@ -38,6 +38,10 @@ struct CircuitNode {
     }
     
     virtual void RemoveInput(CircuitNode *node) = 0;
+    virtual olc::vi2d GetConnectionPoint(CircuitNode *parent) {
+        return pos + SpriteSize + olc::vi2d{(int)SpriteSize.x, 0};
+    }
+    
     virtual void Draw(olc::Pixel TintCol = olc::WHITE)
     {
         float TargetPosX = (float)((SpriteIndex * (int)SpriteSize.x) % SpriteSheet->Sprite()->width);
