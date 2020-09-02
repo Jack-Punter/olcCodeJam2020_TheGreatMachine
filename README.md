@@ -9,3 +9,6 @@ It does however have the prerequisite that msvc's cl.exe is exported to the evir
 In order to do this call the vcvarsall.bat file within the visual studio install path.
 Below is an example on where this may be and shows the parameters required.
 `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat x64`
+
+# Data Desk
+All files found in the data_desk folder are courtesy of Ryan Fleury: https://github.com/ryanfleury/data_desk
