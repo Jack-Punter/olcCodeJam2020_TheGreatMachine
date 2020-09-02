@@ -10,5 +10,11 @@ In order to do this call the vcvarsall.bat file within the visual studio install
 Below is an example on where this may be and shows the parameters required.
 `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat x64`
 
+# Level Generator
+I was lazy so SPDene wrote a python script to generate the OnUserCreate for the level base classes.
+To use this, from the root directory of the repostitory do (Requires Python 3.7):
+`python LevelGen.py [numInputs] [numOutputs] <optionalLevelName>`
+The generated file will be placed into `src/generated/`
+
 # Data Desk
 All files found in the data_desk folder are courtesy of Ryan Fleury: https://github.com/ryanfleury/data_desk
