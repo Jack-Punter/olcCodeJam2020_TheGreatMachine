@@ -103,14 +103,8 @@ struct CircuitEditor {
                     }
                 }
             }
-            if (FirstClick) {
-                pge->DrawLine(FirstClick->pos + FirstClick->SpriteSize, pge->GetMousePos());
-            }
-            if (FirstClick && pge->GetMouse(1).bPressed) {
-                FirstClick = 0;
-            }
             
-            if(pge->GetMouse(1).bPressed) {
+            if(!FirstClick && pge->GetMouse(1).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
                 if(node) {
                     std::vector<CircuitNode *> children = node->GetChildren();
@@ -129,6 +123,14 @@ struct CircuitEditor {
                     }
                 }
             }
+            
+            if (FirstClick) {
+                pge->DrawLine(FirstClick->pos + FirstClick->SpriteSize, pge->GetMousePos());
+            }
+            if (FirstClick && pge->GetMouse(1).bPressed) {
+                FirstClick = 0;
+            }
+            
         } else if (CurrentControlMode == INTERACT) {
             if(pge->GetMouse(0).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
@@ -247,9 +249,17 @@ struct CircuitEditor {
                 
                 delete *pnode;
                 *pnode = nullptr;
+            } else {
+                std::vector<CircuitNode *> tmp = (*pnode)->GetChildren();
+                for(CircuitNode *t : tmp) {
+                    if(!t->IsStatic) {
+                        (*pnode)->RemoveInput(t);
+                        delete t;
+                    }
+                }
             }
+            RemoveErase(&CircuitTrees, nullptr);
         }
-        RemoveErase(&CircuitTrees, nullptr);
     };
     
     void ClearEditorNonStatic() {

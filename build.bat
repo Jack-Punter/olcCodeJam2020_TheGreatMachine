@@ -14,7 +14,7 @@ IF NOT EXIST %dataDeskDir% mkdir %dataDeskDir%
 IF NOT EXIST %dataDeskCustomDir% mkdir %dataDeskCustomDir%
 IF NOT EXIST  %srcDir% mkdir %srcDir%
 IF NOT EXIST  %srcDir%\generated mkdir %srcDir%\generated
-IF NOT EXIST  %buildDir% mkdir  %buildDir%
+IF NOT EXIST  %buildDir% mkdir %buildDir%
 
 echo ========Build Data Desk========
 pushd %dataDeskDir%
