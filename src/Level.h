@@ -196,72 +196,25 @@ struct Level {
     olc::vf2d SideBarPos;
 };
 
-struct BlackBoxAND : public BlackBoxCircuitNode {
-    bool Evaluate(CircuitNode * callingParent) override {
-        return SafeEval(Input[0], this) && SafeEval(Input[1], this);
-    }
-};
-
-struct ExampleLevel : public Level
+struct SandboxLevel : public Level
 {
-    void OnUserCreate(olc::PixelGameEngine *_pge)
+    void OnUserCreate(olc::PixelGameEngine *_pge) override
     {
-        LevelName = "Example Level";
-        LevelCompleteName = "Example Level\nAND Gate";
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        
-        CircuitNodeBIT *Input1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge,  IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        Input1->Held = false;
-        Input1->IsStatic = true;
-        Input1->pos = 2 * editor.IoComponentSize;
-        
-        CircuitNodeBIT *Input2 = (CircuitNodeBIT *) CreateHeldNode<IoCircuitNode>(_pge,  IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        Input2->Held = false;
-        Input2->IsStatic = true;
-        Input2->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * 2};
-        
-        CircuitNode *BlackBox = new BlackBoxAND();
-        BlackBox->SpriteIndex = (int)LOGIC_NONE;
-        BlackBox->IsStatic = true;
-        BlackBox->pge = pge;
-        BlackBox->pos = (2 * editor.IoComponentSize) + olc::vi2d{(int)editor.LogicComponentSize.x, 0};
-        BlackBox->SpriteSheet = editor.LogicComponentRenderable;
-        BlackBox->SpriteSize = editor.LogicComponentSize;
-        BlackBox->Held = false;
-        
-        BlackBox->ConnectChild(Input1);
-        BlackBox->ConnectChild(Input2);
-        
-        CircuitNode *Output = CreateHeldNode<IoCircuitNode>(_pge,  IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
-        Output->Held = false;
-        Output->IsStatic = true;
-        Output->pos = (3 * editor.IoComponentSize) + olc::vi2d{2 * (int)editor.LogicComponentSize.x + 3 * (int)editor.IoComponentSize.x, 0};
-        Output->ConnectChild(BlackBox);
-        editor.CircuitTrees.push_back(Output);
-        
-        CircuitNodeBIT *UserInput1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge,  IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        UserInput1->Held = false;
-        UserInput1->IsStatic = true;
-        UserInput1->pos = {2 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 4 };
-        
-        CircuitNodeBIT *UserInput2 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge,  IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        UserInput2->Held = false;
-        UserInput2->IsStatic = true;
-        UserInput2->pos = {2 * (int)editor.IoComponentSize.x, 3 * pge->ScreenHeight() / 4 };
-        
-        CircuitNode *UserOutput = CreateHeldNode<IoCircuitNode>(_pge,  IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
-        UserOutput->Held = false;
-        UserOutput->IsStatic = true;
-        UserOutput->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2};
-        
-        editor.CircuitTrees.push_back(UserInput1);
-        editor.CircuitTrees.push_back(UserInput2);
-        editor.CircuitTrees.push_back(UserOutput);
-        
-        Inputs.push_back({Input1, UserInput1});
-        Inputs.push_back({Input2, UserInput2});
-        Outputs.push_back({Output, UserOutput});
+        LevelName = "Sandbox Level";
+        LevelCompleteName = "Sandbox Level";
+    }
+    void OnUserUpdate(float fElapsedTime) override
+    {
+        editor.OnUserUpdate(fElapsedTime);
+    }
+    
+    void DrawUI() override
+    {
+        ShowLevelControls = false;
+        ShowTruthTable = false;
+        Level::DrawUI();
     }
 };
 

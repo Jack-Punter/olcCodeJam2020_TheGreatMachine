@@ -13,6 +13,7 @@ struct CircuitEditor {
         IoComponentRenderable->Load("..\\misc\\IOComponents.png");
     }
     
+    CircuitNode *NewNode = 0;
     void OnUserUpdate(float fElapsedTime)
     {
         for(const auto& t : CircuitTrees) {
@@ -23,34 +24,40 @@ struct CircuitEditor {
         {
             if ((CurrentLogicComponent != LOGIC_NONE) || (CurrentIoComponent != IO_NONE))
             {
-                // TODO(jack): Memory Leak?
-                CircuitNode *NewNode;
-                if (CurrentLogicComponent != LOGIC_NONE) {
-                    NewNode = CreateHeldNode<LogicCircuitNode>(pge, CurrentLogicComponent, LogicComponentSize,
-                                                               LogicComponentRenderable);
-                } else if (CurrentIoComponent != IO_NONE) {
-                    NewNode = CreateHeldNode<IoCircuitNode>(pge, CurrentIoComponent, IoComponentSize,
-                                                            IoComponentRenderable);
-                }
-                
-                bool IsColliding = false;
-                olc::Pixel Tint = GetHeldTintColor(NewNode, &IsColliding);
-                NewNode->Draw(Tint);
-                
-                if(pge->GetMouse(0).bPressed && !IsColliding) {
-                    NewNode->Held = false;
-                    CircuitTrees.push_back(NewNode);
-                    if (!pge->GetKey(olc::CTRL).bHeld) {
+                if (!NewNode) {
+                    if (CurrentLogicComponent != LOGIC_NONE) {
+                        printf("Allocating %s node\n", LogicComponentStrings[(int)CurrentLogicComponent]);
+                        NewNode = CreateHeldNode<LogicCircuitNode>(pge, CurrentLogicComponent, LogicComponentSize,
+                                                                   LogicComponentRenderable);
+                    } else if (CurrentIoComponent != IO_NONE) {
+                        printf("Allocating %s node\n", IoComponentStrings[(int)CurrentIoComponent]);
+                        NewNode = CreateHeldNode<IoCircuitNode>(pge, CurrentIoComponent, IoComponentSize,
+                                                                IoComponentRenderable);
+                    }
+                } else {
+                    NewNode->pos = pge->GetMousePos() - NewNode->SpriteSize;
+                    bool IsColliding = false;
+                    olc::Pixel Tint = GetHeldTintColor(NewNode, &IsColliding);
+                    NewNode->Draw(Tint);
+                    
+                    if(pge->GetMouse(0).bPressed && !IsColliding) {
+                        NewNode->Held = false;
+                        CircuitTrees.push_back(NewNode);
+                        NewNode = 0;
+                        if (!pge->GetKey(olc::CTRL).bHeld) {
+                            CurrentIoComponent = IO_NONE;
+                            CurrentLogicComponent = LOGIC_NONE;
+                        }
+                    }
+                    if(pge->GetMouse(1).bPressed) {
+                        delete NewNode;
+                        NewNode = 0;
                         CurrentIoComponent = IO_NONE;
                         CurrentLogicComponent = LOGIC_NONE;
                     }
                 }
-                if(pge->GetMouse(1).bPressed) {
-                    CurrentIoComponent = IO_NONE;
-                    CurrentLogicComponent = LOGIC_NONE;
-                }
             }
-            else
+            else // We aren't placing new node
             {
                 if (!FirstClick && pge->GetMouse(0).bPressed) {
                     CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
@@ -198,6 +205,10 @@ struct CircuitEditor {
                 LogicComponent OldLogicComponent = CurrentLogicComponent;
                 ImGui::ListBox("LogicComponents", &(int)CurrentLogicComponent, LogicComponentStrings, ArrayCount(LogicComponentStrings), ArrayCount(LogicComponentStrings));
                 if(OldLogicComponent != CurrentLogicComponent) {
+                    if (NewNode) {
+                        delete NewNode;
+                        NewNode = 0;
+                    }
                     CurrentIoComponent = IO_NONE;
                 }
                 
@@ -206,11 +217,19 @@ struct CircuitEditor {
                 IoComponent OldIoComponent = CurrentIoComponent;
                 ImGui::ListBox("IoComponents", &(int)CurrentIoComponent, IoComponentStrings, ArrayCount(IoComponentStrings), ArrayCount(IoComponentStrings));
                 if(OldIoComponent != CurrentIoComponent) {
+                    if (NewNode) {
+                        delete NewNode;
+                        NewNode = 0;
+                    }
                     CurrentLogicComponent = LOGIC_NONE;
                 }
             }
             else
             {
+                if (NewNode) {
+                    delete NewNode;
+                    NewNode = 0;
+                }
                 CurrentIoComponent = IO_NONE;
                 CurrentLogicComponent = LOGIC_NONE;
             }

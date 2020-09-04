@@ -15,9 +15,16 @@ inline void RemoveErase(Container* container, T value) {
 #include "CircuitEditor.h"
 #include "CircuitNode.h"
 #include "Level.h"
+#include "generated\AndLevel.h"
+#include "generated\OrLevel.h"
+#include "generated\XorLevel.h"
+#include "generated\NandLevel.h"
+#include "generated\NorLevel.h"
+#include "generated\XnorLevel.h"
+#include "generated\NotLevel.h"
 #include "generated\FullAdderLevel.h"
-#include "generated\SPD1Level.h"
-#include "generated\SPD2Level.h"
+
+//#include "generated\FullAdderLevel.h"
 
 #include <algorithm>
 
@@ -64,16 +71,35 @@ class TheGreatMachine : public olc::PixelGameEngine
         SetDrawTarget(BGLayer);
         Clear(olc::Pixel(0x4c, 0x4c, 0x4c));
         
-        Levels.push_back(new ExampleLevel);
+        // ================ SimpleLevels ================
+        Levels.push_back(new AndLevel);
         Levels.back()->OnUserCreate(this);
         
+        Levels.push_back(new OrLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new XorLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new NandLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new NorLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new XnorLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new NotLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        // ================ MediumLevels ================
         Levels.push_back(new FullAdderLevel);
         Levels.back()->OnUserCreate(this);
         
-        Levels.push_back(new SPD1Level);
-        Levels.back()->OnUserCreate(this);
+        // ================= HardLevels =================
         
-        Levels.push_back(new SPD2Level);
+        Levels.push_back(new SandboxLevel);
         Levels.back()->OnUserCreate(this);
         
         return true;
@@ -109,26 +135,54 @@ class TheGreatMachine : public olc::PixelGameEngine
                 olc::vi2d ScreenCentre = ScreenSize() / 2;
                 int TextScale = 4;
                 olc::vi2d LineSize =  GetTextSize(LevelSelectText) * TextScale;
-                DrawString(ScreenCentre.x - LineSize.x / 2, 1 * LineSize.y, LevelSelectText, olc::WHITE, TextScale);
+                DrawString(ScreenCentre.x - LineSize.x / 2, 1 * LineSize.y / 2, LevelSelectText, olc::WHITE, TextScale);
                 
                 for (int i = 0; i < Levels.size(); ++i) {
                     int LevelTextScale = 3;
                     
-                    char * text;
+                    char *RawText;
                     olc::Pixel TextColor;
                     if (Levels[i]->LevelCompleted) {
-                        text = Levels[i]->LevelCompleteName;
+                        RawText= Levels[i]->LevelCompleteName;
                         TextColor = olc::GREEN;
                     } else {
-                        text = Levels[i]->LevelName;
+                        RawText= Levels[i]->LevelName;
                         TextColor = olc::WHITE;
                     }
-                    olc::vi2d textSize =  GetTextSize(text) * LevelTextScale;
+                    std::vector<std::string> lines;
+                    std::vector<olc::vi2d> LineSizes;
                     
-                    olc::vi2d textPos = {ScreenCentre.x - textSize.x / 2,  (1 + i) * (ScreenHeight() / (1 + (int)Levels.size()))};
+                    int start = 0;
+                    for(int i = 0; i < strlen(RawText) + 1; ++i) {
+                        if (RawText[i] == '\n' || RawText[i] == '\0') {
+                            lines.emplace_back(&RawText[start], &RawText[i]);
+                            LineSizes.push_back(GetTextSize(lines.back()) * LevelTextScale);
+                            start = i + 1;
+                        }
+                    }
+                    
+                    int textMaxXSize = std::max_element(std::begin(LineSizes), std::end(LineSizes),
+                                                        [] (olc::vi2d size1, olc::vi2d size2) {
+                                                            return size1.x < size2.x;
+                                                        })->x;
+                    olc::vi2d textPos = {
+                        (1 + i / 7) * (ScreenWidth() / 4),
+                        (1 + i % 7) * (ScreenHeight() / (1 + 7))
+                    };
+                    
+                    olc::vi2d textTLeft = {
+                        textPos.x - textMaxXSize / 2,
+                        textPos.y - (int)(LineSizes.size() * LineSizes[0].y) / 2
+                    };
+                    
+                    olc::vi2d textBRight = {
+                        textPos.x + textMaxXSize / 2,
+                        textPos.y + (int)(LineSizes.size() * LineSizes[0].y) / 2
+                    };
+                    
                     olc::vi2d MousePos = GetMousePos();
-                    if (MousePos.x >= textPos.x && MousePos.x <= textPos.x + textSize.x &&
-                        MousePos.y >= textPos.y && MousePos.y <= textPos.y + textSize.y)
+                    if (MousePos.x >= textTLeft.x && MousePos.x <= textBRight.x &&
+                        MousePos.y >= textTLeft.y && MousePos.y <= textBRight.y)
                     {
                         TextColor = olc::BLUE;
                         if (GetMouse(0).bPressed) {
@@ -136,8 +190,12 @@ class TheGreatMachine : public olc::PixelGameEngine
                             ActiveLevel = Levels[i];
                         }
                     }
-                    
-                    DrawString(textPos, text, TextColor, LevelTextScale);
+                    int yPos = textTLeft.y;
+                    for(int l = 0; l < lines.size(); ++l)
+                    {
+                        DrawString({textPos.x - LineSizes[l].x / 2, yPos + l * LineSizes[l].y},
+                                   lines[l], TextColor, LevelTextScale);
+                    }
                 }
             } break;
             
