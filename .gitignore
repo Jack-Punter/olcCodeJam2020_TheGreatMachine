@@ -9,3 +9,5 @@
 *.lib
 *.exp
 build/
+
+wtcmd.lnk
