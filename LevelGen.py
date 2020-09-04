@@ -11,7 +11,21 @@ def generate(inputs, outputs, level_code, validate_filename):
         file.write(f"    /* Number of inputs: {inputs} */\n")
         file.write(f"    /* Number of outputs: {outputs} */\n\n")
         file.write("    bool Evaluate(CircuitNode * callingParent) override {\n")
-        file.write("        /* return SafeEval(Input[0], this) && SafeEval(Input[1], this); */\n")
+        for i in range(inputs):
+            file.write(f"        bool {chr(ord('a')+i)} = SafeEval(Input[{i}], this);\n")
+
+        file.write("        ")  # no \n
+
+        for o in range(outputs):
+            file.write(f"if (callingParent == parents[{o}])" + " {\n")
+            file.write("            return ?;\n")
+            file.write("        } else ") # no \n
+
+        file.write("{\n")
+        file.write("            Assert(true);\n")
+        file.write("            return false;\n")
+        file.write("        }\n")
+
         file.write("    }\n")
         file.write("};\n")
         file.write("\n")
@@ -55,7 +69,7 @@ def generate(inputs, outputs, level_code, validate_filename):
         file.write("        BlackBox->SpriteIndex = (int)LOGIC_NONE;\n")
         file.write("        BlackBox->IsStatic = true;\n")
         file.write("        BlackBox->pge = pge;\n")
-        file.write("        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), " + 
+        file.write("        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), " + f"(Input1->pos.y + (Input{inputs}->pos.y + 2 * (int)Input{inputs}->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y" + "};\n")
 				  f"(Input1->pos.y + (Input{inputs}->pos.y + 2 * (int)Input{inputs}->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y" + "};\n")
         file.write("        BlackBox->SpriteSheet = editor.LogicComponentRenderable;\n")
         file.write("        BlackBox->SpriteSize = editor.LogicComponentSize;\n")
