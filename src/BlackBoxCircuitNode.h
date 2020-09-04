@@ -60,7 +60,8 @@ struct BlackBoxCircuitNode : public CircuitNode {
         return Collisions;
     }
     
-    CircuitNode *GetNodeAt(olc::vi2d p) override {
+    CircuitNode *GetNodeAt(olc::vi2d p) override
+    {
         CircuitNode *Result;
         Result = CircuitNode::GetNodeAt(p);
         if (Result) return Result;
@@ -73,12 +74,30 @@ struct BlackBoxCircuitNode : public CircuitNode {
         return 0;
     }
     
-    bool ConnectChild(CircuitNode *node) override {
+    bool ConnectChild(CircuitNode *node) override
+    {
+        if (node == this || node->HasChildRecursive(this)) {
+            return false;
+        }
+        
         if (node) {
             Input.push_back(node);
         }
         return true;
     };
+    
+    bool HasChildRecursive(CircuitNode *node) override
+    {
+        bool Result = false;
+        for(auto *i : Input)
+        {
+            if(!Result && i) {
+                Result = i == node || i->HasChildRecursive(node);
+            }
+        }
+        
+        return Result;
+    }
     
     std::vector<CircuitNode *> GetChildren() override {
         return Input;

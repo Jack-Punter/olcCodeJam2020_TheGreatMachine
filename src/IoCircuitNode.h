@@ -41,19 +41,20 @@ struct IoCircuitNode : public CircuitNode {
     
     std::vector<CircuitNode *> IntersectionsWithRect(olc::vf2d tLeft, olc::vf2d bRight) override
     {
-        std::vector<CircuitNode *> connections;
+        std::vector<CircuitNode *> Collisions;
         
         std::vector<CircuitNode *> ThisCollision = CircuitNode::IntersectionsWithRect(tLeft, bRight);
         std::vector<CircuitNode *> ChildCollision = SafeIntersectionsWithRect(Input, tLeft, bRight);
         
-        connections.reserve(ThisCollision.size() + ChildCollision.size());
-        connections.insert(std::end(connections), std::begin(ThisCollision), std::end(ThisCollision));
-        connections.insert(std::end(connections), std::begin(ChildCollision), std::end(ChildCollision));
+        Collisions.reserve(ThisCollision.size() + ChildCollision.size());
+        Collisions.insert(std::end(Collisions), std::begin(ThisCollision), std::end(ThisCollision));
+        Collisions.insert(std::end(Collisions), std::begin(ChildCollision), std::end(ChildCollision));
         
-        return connections;
+        return Collisions;
     }
     
-    CircuitNode *GetNodeAt(olc::vi2d p) override {
+    CircuitNode *GetNodeAt(olc::vi2d p) override
+    {
         CircuitNode *Result;
         Result = CircuitNode::GetNodeAt(p);
         if (Result) return Result;
@@ -64,8 +65,13 @@ struct IoCircuitNode : public CircuitNode {
         return 0;
     }
     
-    bool ConnectChild(CircuitNode *node) override {
+    bool ConnectChild(CircuitNode *node) override
+    {
         bool result = false;
+        if (node == this || node->HasChildRecursive(this)) {
+            return false;
+        }
+        
         if (type == IO_LED && !Input) {
             Input = node;
             result = true;
@@ -74,6 +80,16 @@ struct IoCircuitNode : public CircuitNode {
             node->parents.push_back(this);
         }
         return result;
+    }
+    
+    bool HasChildRecursive(CircuitNode *node) override
+    {
+        bool Result = false;
+        if(Input) {
+            Result = Input == node || Input->HasChildRecursive(node);
+        }
+        
+        return Result;
     }
     
     std::vector<CircuitNode *> GetChildren() override {

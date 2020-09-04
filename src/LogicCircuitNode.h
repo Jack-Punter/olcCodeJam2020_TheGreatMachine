@@ -93,8 +93,13 @@ struct LogicCircuitNode : public CircuitNode {
         return 0;
     }
     
-    bool ConnectChild(CircuitNode *node) override {
+    bool ConnectChild(CircuitNode *node) override
+    {
         bool result = false;
+        if (node == this || node->HasChildRecursive(this)) {
+            return false;
+        }
+        
         if (!Input[0]) {
             Input[0] = node;
             result = true;
@@ -107,6 +112,18 @@ struct LogicCircuitNode : public CircuitNode {
         }
         return result;
     };
+    
+    bool HasChildRecursive(CircuitNode *node) override
+    {
+        bool Result = false;
+        if(Input[0]) {
+            Result = Input[0] == node || Input[0]->HasChildRecursive(node);
+        }
+        if(!Result && Input[1]) {
+            Result = Input[1] == node || Input[1]->HasChildRecursive(node);
+        }
+        return Result;
+    }
     
     std::vector<CircuitNode *> RemoveStaticChildrenRecursive()
     {

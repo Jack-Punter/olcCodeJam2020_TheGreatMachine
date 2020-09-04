@@ -16,6 +16,8 @@ inline void RemoveErase(Container* container, T value) {
 #include "CircuitNode.h"
 #include "Level.h"
 #include "generated\FullAdderLevel.h"
+#include "generated\SPD1Level.h"
+#include "generated\SPD2Level.h"
 
 #include <algorithm>
 
@@ -23,8 +25,7 @@ class TheGreatMachine : public olc::PixelGameEngine
 {
     using olc::PixelGameEngine::FillRect;
     public:
-	TheGreatMachine()
-    {
+	TheGreatMachine() {
 		sAppName = "TheGreatMachine";
 	}
     public:
@@ -69,6 +70,12 @@ class TheGreatMachine : public olc::PixelGameEngine
         Levels.push_back(new FullAdderLevel);
         Levels.back()->OnUserCreate(this);
         
+        Levels.push_back(new SPD1Level);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new SPD2Level);
+        Levels.back()->OnUserCreate(this);
+        
         return true;
 	}
     
@@ -95,9 +102,9 @@ class TheGreatMachine : public olc::PixelGameEngine
                 SetDrawTarget(BGLayer);
                 float ScaleX = (float)ScreenWidth() / (float)TheGreatMachineImage->Sprite()->width;
                 float ScaleY = (float)ScreenHeight() / (float)TheGreatMachineImage->Sprite()->height;
-                DrawDecal({0.0f, 0.0f}, TheGreatMachineImage->Decal(), {ScaleX, ScaleY}, olc::Pixel(255, 255, 255, 128));
+                DrawDecal({0.0f, 0.0f}, TheGreatMachineImage->Decal(), {ScaleX, ScaleY}, olc::Pixel(255, 255, 255, 32));
                 SetDrawTarget(GameLayer);
-                const char *LevelSelectText = "[WIP] Select Level";
+                const char *LevelSelectText = "Select Level";
                 
                 olc::vi2d ScreenCentre = ScreenSize() / 2;
                 int TextScale = 4;
@@ -105,6 +112,8 @@ class TheGreatMachine : public olc::PixelGameEngine
                 DrawString(ScreenCentre.x - LineSize.x / 2, 1 * LineSize.y, LevelSelectText, olc::WHITE, TextScale);
                 
                 for (int i = 0; i < Levels.size(); ++i) {
+                    int LevelTextScale = 3;
+                    
                     char * text;
                     olc::Pixel TextColor;
                     if (Levels[i]->LevelCompleted) {
@@ -114,9 +123,8 @@ class TheGreatMachine : public olc::PixelGameEngine
                         text = Levels[i]->LevelName;
                         TextColor = olc::WHITE;
                     }
-                    olc::vi2d textSize =  GetTextSize(text) * TextScale;
+                    olc::vi2d textSize =  GetTextSize(text) * LevelTextScale;
                     
-                    // TODO(jack): Postion based on how many levels there are
                     olc::vi2d textPos = {ScreenCentre.x - textSize.x / 2,  (1 + i) * (ScreenHeight() / (1 + (int)Levels.size()))};
                     olc::vi2d MousePos = GetMousePos();
                     if (MousePos.x >= textPos.x && MousePos.x <= textPos.x + textSize.x &&
@@ -129,7 +137,7 @@ class TheGreatMachine : public olc::PixelGameEngine
                         }
                     }
                     
-                    DrawString(textPos, text, TextColor, TextScale);
+                    DrawString(textPos, text, TextColor, LevelTextScale);
                 }
             } break;
             
@@ -146,8 +154,8 @@ class TheGreatMachine : public olc::PixelGameEngine
     void DrawUI()
     {
         BeginImGuiFrame();
-        
-        if (GameState == GAME_STATE_EDITOR) {
+        if (GameState == GAME_STATE_EDITOR)
+        {
             if (ImGui::BeginMainMenuBar())
             {
                 if (ImGui::BeginMenu("Main")) {
@@ -155,9 +163,24 @@ class TheGreatMachine : public olc::PixelGameEngine
                         GameState = GAME_STATE_LEVEL_SELECT;
                     }
                     
+                    ImGui::MenuItem("Controls", 0, &ShowControls);
                     ImGui::EndMenu();
                 }
                 ImGui::EndMainMenuBar();
+            }
+            
+            if (ShowControls) {
+                if(ImGui::Begin("Controls", &ShowControls)) {
+                    ImGui::TextWrapped("Editor Controls Window:\n"
+                                       "Use the \"Control Modes\" list to select control mode.\n\n"
+                                       "PLACE_COMPONENTS: Select a compnent from one of the components list. Left Click in the world to place. (Hold CTRL to place multiple ,Right click to cancel).\nClick on a node in the world to move it. (Right Click to cancel)\n\n"
+                                       "PLACE_CONNECTIONS: Click on a component, then click on the component you want to connect it to. The component which is taking the input must be the second click. Right Click to remove all connections to a component.\n\n"
+                                       "INTERACT: Click to toggle the values of the \"IO_BIT\" components.\n\n"
+                                       "DELETE_NODES: Click a component to detete it (Hold CTRL to also delete all of its children). Right Click to delete all connections to a component.\n\n"
+                                       "Simulation Window:\n"
+                                       "This window tells you whether the level has been completed.\nThe \"Evaluate\" button tests your circuit and will halt on the first failed state.\nThe \"Simulate\" button runs a full input sequence without halting. (This does NOT check if the level is complete! Use \"Evaluate\" for this)");
+                }
+                ImGui::End();
             }
             ActiveLevel->DrawUI();
         }
@@ -187,6 +210,8 @@ class TheGreatMachine : public olc::PixelGameEngine
         GAME_STATE_LEVEL_SELECT,
         GAME_STATE_EDITOR
     } GameState = GAME_STATE_TITLE;
+    
+    bool ShowControls = false;
     
     std::vector<Level *> Levels;
     Level *ActiveLevel;

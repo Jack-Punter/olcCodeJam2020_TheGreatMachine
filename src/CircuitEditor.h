@@ -18,11 +18,13 @@ struct CircuitEditor {
         for(const auto& t : CircuitTrees) {
             t->Draw();
         }
+        
         if (CurrentControlMode == PLACE_COMPONENTS)
         {
-            if (CurrentLogicComponent != LOGIC_NONE || (CurrentIoComponent != IO_NONE))
+            if ((CurrentLogicComponent != LOGIC_NONE) || (CurrentIoComponent != IO_NONE))
             {
-                CircuitNode *NewNode = 0;
+                // TODO(jack): Memory Leak?
+                CircuitNode *NewNode;
                 if (CurrentLogicComponent != LOGIC_NONE) {
                     NewNode = CreateHeldNode<LogicCircuitNode>(pge, CurrentLogicComponent, LogicComponentSize,
                                                                LogicComponentRenderable);
@@ -42,6 +44,10 @@ struct CircuitEditor {
                         CurrentIoComponent = IO_NONE;
                         CurrentLogicComponent = LOGIC_NONE;
                     }
+                }
+                if(pge->GetMouse(1).bPressed) {
+                    CurrentIoComponent = IO_NONE;
+                    CurrentLogicComponent = LOGIC_NONE;
                 }
             }
             else
@@ -90,12 +96,31 @@ struct CircuitEditor {
                     }
                 }
             }
-            
             if (FirstClick) {
                 pge->DrawLine(FirstClick->pos + FirstClick->SpriteSize, pge->GetMousePos());
             }
             if (FirstClick && pge->GetMouse(1).bPressed) {
                 FirstClick = 0;
+            }
+            
+            if(pge->GetMouse(1).bPressed) {
+                CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
+                if(node) {
+                    std::vector<CircuitNode *> children = node->GetChildren();
+                    CircuitTrees.reserve(CircuitTrees.size() + children.size());
+                    CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
+                    for(auto* c : children) {
+                        c->RemoveParent(node);
+                        node->RemoveInput(c);
+                    }
+                    // NOTE(jack): If Ctrl is pressed and the node is not a root, add it as a root
+                    // and remove it from its parents;
+                    if (std::find(std::begin(CircuitTrees), std::end(CircuitTrees), node) == std::end(CircuitTrees))
+                    {
+                        node->RemoveFromParents();
+                        CircuitTrees.push_back(node);
+                    }
+                }
             }
         } else if (CurrentControlMode == INTERACT) {
             if(pge->GetMouse(0).bPressed) {
@@ -104,18 +129,7 @@ struct CircuitEditor {
                     node->OnClickEvent();
                 }
             }
-        } else if (CurrentControlMode == DELETE_TREES) {
-            if(pge->GetMouse(0).bPressed) {
-                CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
-                if(node && !node->IsStatic) {
-                    std::vector<CircuitNode*> StaticChildren = node->RemoveStaticChildrenRecursive();
-                    CircuitTrees.reserve(CircuitTrees.size() + StaticChildren.size());
-                    CircuitTrees.insert(std::end(CircuitTrees), std::begin(StaticChildren), std::end(StaticChildren));
-                    delete node;
-                    RemoveErase(&CircuitTrees, node);
-                }
-            }
-        } else if (CurrentControlMode == DELETE_NODES) {
+        } else if (CurrentControlMode == DELETE_COMPONENTS) {
             if (pge->GetMouse(0).bPressed && !pge->GetKey(olc::CTRL).bHeld) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
                 if(node && !node->IsStatic) {
@@ -131,7 +145,17 @@ struct CircuitEditor {
                     delete node;
                 }
             }
-            if (pge->GetMouse(0).bPressed && pge->GetKey(olc::CTRL).bHeld) {
+            if(pge->GetMouse(0).bPressed && pge->GetKey(olc::CTRL).bHeld) {
+                CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
+                if(node && !node->IsStatic) {
+                    std::vector<CircuitNode*> StaticChildren = node->RemoveStaticChildrenRecursive();
+                    CircuitTrees.reserve(CircuitTrees.size() + StaticChildren.size());
+                    CircuitTrees.insert(std::end(CircuitTrees), std::begin(StaticChildren), std::end(StaticChildren));
+                    delete node;
+                    RemoveErase(&CircuitTrees, node);
+                }
+            }
+            if (pge->GetMouse(1).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
                 if(node) {
                     std::vector<CircuitNode *> children = node->GetChildren();
@@ -157,7 +181,7 @@ struct CircuitEditor {
     {
         //Create and react to your UI here
         //ImGui::ShowDemoWindow();
-        if (ImGui::Begin("Parts List"))
+        if (ImGui::Begin("Editor Controls"))
         {
             //ImGui::PushItemWidth(-1);
             if(ImGui::Button("Clear")) {
@@ -225,6 +249,7 @@ struct CircuitEditor {
         olc::Pixel Tint = olc::Pixel(0, 255, 0, 64);
         for(auto *Node : CircuitTrees) {
             std::vector nodes = Node->IntersectionsWithRect(NewNode->pos, NewNode->pos + 2 * NewNode->SpriteSize);
+            RemoveErase(&nodes, NewNode);
             if (nodes.size() > 0) {
                 if(!(nodes.size() == 1 && nodes[0] == NewNode)) {
                     Tint = olc::Pixel(255, 0, 0, 64);

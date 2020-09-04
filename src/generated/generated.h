@@ -49,9 +49,8 @@ typedef enum ControlMode
 {
     PLACE_COMPONENTS,
     PLACE_CONNECTIONS,
+    DELETE_COMPONENTS,
     INTERACT,
-    DELETE_TREES,
-    DELETE_NODES,
 }
 ControlMode;
 
@@ -59,9 +58,8 @@ const char *ControlModeStrings[]
 {
 		"PLACE_COMPONENTS",
 	"PLACE_CONNECTIONS",
+	"DELETE_COMPONENTS",
 	"INTERACT",
-	"DELETE_TREES",
-	"DELETE_NODES",
 };
 
 #endif //GENERATED_GENERATED_H

@@ -72,9 +72,8 @@ struct CircuitNode {
     virtual void OnClickEvent() {};
     
     virtual bool Evaluate(CircuitNode * callingParent) = 0;
-    virtual bool ConnectChild(CircuitNode *node) {
-        return false;
-    }
+    virtual bool ConnectChild(CircuitNode *node) = 0;
+    virtual bool HasChildRecursive(CircuitNode *node) = 0;
     
     virtual std::vector<CircuitNode *> GetChildren() = 0;
     virtual std::vector<CircuitNode *> RemoveStaticChildrenRecursive() = 0;
