@@ -275,10 +275,22 @@ class TheGreatMachine : public olc::PixelGameEngine
     olc::imgui::PGE_ImGUI pge_imgui;
 };
 
-int main()
+int main(int argc, char *argv[])
 {
+    bool fullScreen = false;
+    printf("argc: %d\n", argc);
+    for(int i = 0; i < argc; ++ i) {
+        printf("argv[%d]: %s\n", i, argv[i]);
+    }
+    
+    if(argc == 2) {
+        if(strcmp(argv[1], "true") == 0)
+        {
+            fullScreen = true;
+        }
+    }
     TheGreatMachine demo;
-    if (demo.Construct(1280, 720, 1, 1))
+    if (demo.Construct(1280, 720, 1, 1, fullScreen))
         demo.Start();
     
     return 0;
