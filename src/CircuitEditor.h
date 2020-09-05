@@ -111,7 +111,7 @@ struct CircuitEditor {
             
             if(!FirstClick && pge->GetMouse(1).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
-                if(node) {
+                if(node && !node->IsStatic) {
                     std::vector<CircuitNode *> children = node->GetChildren();
                     CircuitTrees.reserve(CircuitTrees.size() + children.size());
                     CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
