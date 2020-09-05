@@ -44,9 +44,9 @@ struct LogicCircuitNode : public CircuitNode {
             olc::vi2d leftLowerInput = leftCentre + olc::vi2d{0, (int)SpriteSize.y / 2};
             olc::Pixel lineColor = Input[0]->Evaluate(this) ? olc::YELLOW : olc::BLUE;
             if(type == LOGIC_BUFFER || type == LOGIC_NOT) {
-                pge->DrawLine(leftCentre, inputConnectionPos, lineColor);
+                DrawConnectorLine(leftCentre, inputConnectionPos, lineColor);
             } else {
-                pge->DrawLine(leftUpperInput, inputConnectionPos, lineColor);
+                DrawConnectorLine(leftUpperInput, inputConnectionPos, lineColor);
             }
             Input[0]->Draw(TintCol);
         }
@@ -58,7 +58,9 @@ struct LogicCircuitNode : public CircuitNode {
             olc::vi2d leftLowerInput = leftCentre + olc::vi2d{0, (int)SpriteSize.y / 2};
             
             olc::Pixel lineColor = Input[1]->Evaluate(this) ? olc::YELLOW : olc::BLUE;
-            pge->DrawLine(leftLowerInput, inputConnectionPos, lineColor);
+            
+            DrawConnectorLine(leftLowerInput, inputConnectionPos, lineColor);
+            
             Input[1]->Draw(TintCol);
         }
         CircuitNode::Draw(TintCol);

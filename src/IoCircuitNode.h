@@ -20,10 +20,12 @@ struct IoCircuitNode : public CircuitNode {
     {
         if(Input) {
             olc::vi2d leftCentre = pos + olc::vi2d{0, (int)SpriteSize.y};
-            olc::vi2d inputConnectPos = Input->GetConnectionPoint(this);
+            olc::vi2d inputConnectionPos = Input->GetConnectionPoint(this);
             
             olc::Pixel lineColor = Input->Evaluate(this) ? olc::YELLOW : olc::BLUE;
-            pge->DrawLine(leftCentre, inputConnectPos, lineColor);
+            
+            DrawConnectorLine(leftCentre, inputConnectionPos, lineColor);
+            
             Input->Draw(TintCol);
         }
         

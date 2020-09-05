@@ -35,12 +35,13 @@ struct BlackBoxCircuitNode : public CircuitNode {
         int counter = 1;
         
         for (auto *node : Input) {
-            olc::vi2d inputConnectPos = node->GetConnectionPoint(this);
+            olc::vi2d inputConnectionPos = node->GetConnectionPoint(this);
             
             olc::vi2d currentInput = pos + olc::vi2d{0, (int)(counter * (2 * SpriteSize.y / (1 + Input.size())))};
             
             olc::Pixel lineColor = node->Evaluate(this) ? olc::YELLOW : olc::BLUE;
-            pge->DrawLine(currentInput, inputConnectPos, lineColor);
+            
+            DrawConnectorLine(currentInput, inputConnectionPos, lineColor);
             
             node->Draw(TintCol);
             ++counter;
