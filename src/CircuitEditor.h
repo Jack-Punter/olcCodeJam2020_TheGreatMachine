@@ -199,13 +199,13 @@ struct CircuitEditor {
             
             ImGui::Text("Control Modes:");
             ImGui::PushItemWidth(-1);
-            ImGui::ListBox("ControlModes", &(int)CurrentControlMode, ControlModeStrings, ArrayCount(ControlModeStrings), ArrayCount(ControlModeStrings));
+            ImGui::ListBox("ControlModes", (int *)&CurrentControlMode, ControlModeStrings, ArrayCount(ControlModeStrings), ArrayCount(ControlModeStrings));
             if(CurrentControlMode == PLACE_COMPONENTS)
             {
                 ImGui::Text("Logic Components:");
                 ImGui::PushItemWidth(-1);
                 LogicComponent OldLogicComponent = CurrentLogicComponent;
-                ImGui::ListBox("LogicComponents", &(int)CurrentLogicComponent, LogicComponentStrings, ArrayCount(LogicComponentStrings), ArrayCount(LogicComponentStrings));
+                ImGui::ListBox("LogicComponents", (int *)&CurrentLogicComponent, LogicComponentStrings, ArrayCount(LogicComponentStrings), ArrayCount(LogicComponentStrings));
                 if(OldLogicComponent != CurrentLogicComponent) {
                     if (NewNode) {
                         delete NewNode;
@@ -217,7 +217,7 @@ struct CircuitEditor {
                 ImGui::Text("IO Components:");
                 ImGui::PushItemWidth(-1);
                 IoComponent OldIoComponent = CurrentIoComponent;
-                ImGui::ListBox("IoComponents", &(int)CurrentIoComponent, IoComponentStrings, ArrayCount(IoComponentStrings), ArrayCount(IoComponentStrings));
+                ImGui::ListBox("IoComponents", (int *)&CurrentIoComponent, IoComponentStrings, ArrayCount(IoComponentStrings), ArrayCount(IoComponentStrings));
                 if(OldIoComponent != CurrentIoComponent) {
                     if (NewNode) {
                         delete NewNode;
