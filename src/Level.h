@@ -47,6 +47,21 @@ struct Level {
     
     virtual void OnUserUpdate(float fElapsedTime)
     {
+        if (LevelCompleted) {
+            int LevelCompleteScale = 3;
+            const char *LevelCompleteText = "Congratulations: Level Complete!";
+            olc::vi2d LevelCompleteTextSize = pge->GetTextSize(LevelCompleteText) * LevelCompleteScale;
+            olc::vi2d LevelCompleteTextPos = {
+                (pge->ScreenWidth() - 300) / 2 - LevelCompleteTextSize.x / 2,
+                2 * LevelCompleteTextSize.y
+            };
+            olc::vf2d fTextPos = {(float)LevelCompleteTextPos.x, (float)LevelCompleteTextSize.y};
+            olc::vf2d fTextScale = {(float)LevelCompleteScale, (float)LevelCompleteScale};
+            
+            olc::Pixel fgCol = olc::GREEN;
+            fgCol.a = 198;
+            pge->DrawStringDecal(fTextPos, LevelCompleteText, fgCol, fTextScale);
+        }
         if (!TruthTable) {
             TruthTableWidth = (Inputs.size() + Outputs.size());
             TruthTableHeight = (size_t)exp2(Inputs.size());
