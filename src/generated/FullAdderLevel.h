@@ -27,8 +27,8 @@ struct FullAdderLevel : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Medium\n(3 - 2)";
-        LevelCompleteName = "Medium\n(3 - 2)\nFull Adder";
+        LevelName = "Medium 1\n(3 - 2)";
+        LevelCompleteName = "Medium 1\n(3 - 2)\nFull Adder";
         
         int InputCenteringYOffset = 0;
         int OutputCenteringYOffset = 1;
