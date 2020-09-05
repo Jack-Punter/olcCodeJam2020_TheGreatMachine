@@ -135,6 +135,10 @@ class TheGreatMachine : public olc::PixelGameEngine
                 olc::vi2d LineSize =  GetTextSize(LevelSelectText) * TextScale;
                 DrawString(ScreenCentre.x - LineSize.x / 2, 1 * LineSize.y / 2, LevelSelectText, olc::WHITE, TextScale);
                 
+                if(GetKey(olc::ESCAPE).bPressed) {
+                    ExitAttempt = true;
+                }
+                
                 for (int i = 0; i < Levels.size(); ++i) {
                     int LevelTextScale = 3;
                     
@@ -180,7 +184,8 @@ class TheGreatMachine : public olc::PixelGameEngine
                     
                     olc::vi2d MousePos = GetMousePos();
                     if (MousePos.x >= textTLeft.x && MousePos.x <= textBRight.x &&
-                        MousePos.y >= textTLeft.y && MousePos.y <= textBRight.y)
+                        MousePos.y >= textTLeft.y && MousePos.y <= textBRight.y &&
+                        !ExitAttempt)
                     {
                         TextColor = olc::BLUE;
                         if (GetMouse(0).bPressed) {
@@ -195,6 +200,55 @@ class TheGreatMachine : public olc::PixelGameEngine
                                    lines[l], TextColor, LevelTextScale);
                     }
                 }
+                
+                if (ExitAttempt) {
+                    int TextScale = 3;
+                    const char *QueryText = "Are you sure you want to exit.";
+                    const char *YesButton = "Yes";
+                    const char *NoButton = "No";
+                    olc::vi2d QueryTextSize = GetTextSize(QueryText) * TextScale;
+                    olc::vi2d buttonSize;
+                    
+                    if(strlen(YesButton) > strlen(NoButton)) {
+                        buttonSize = GetTextSize(YesButton) * TextScale;
+                    } else {
+                        buttonSize = GetTextSize(NoButton) * TextScale;
+                    }
+                    olc::vi2d yesTextSize = GetTextSize(YesButton) * TextScale;
+                    olc::vi2d noTextSize = GetTextSize(NoButton) * TextScale;
+                    
+                    olc::vi2d PopUpSize = QueryTextSize + olc::vi2d{0, QueryTextSize.y * 3};
+                    olc::vi2d PopUpPos = ScreenSize() / 2 - PopUpSize / 2;
+                    
+                    olc::vi2d yesButtonPos = PopUpPos + PopUpSize - olc::vi2d{2 * yesTextSize.x, 2 * QueryTextSize.y};
+                    olc::vi2d noButtonPos = PopUpPos + olc::vi2d{2 * noTextSize.x , 2 * QueryTextSize.y};
+                    
+                    olc::Pixel yesButtonCol = olc::WHITE;
+                    if(GetMouseX() >=yesButtonPos.x && GetMouseX() <= yesButtonPos.x + yesTextSize.x &&
+                       GetMouseY() >=yesButtonPos.y && GetMouseY() <= yesButtonPos.y + yesTextSize.y)
+                    {
+                        if(GetMouse(0).bPressed) {
+                            exit(0);
+                        }
+                        yesButtonCol = olc::BLUE;
+                    }
+                    
+                    olc::Pixel noButtonCol = olc::WHITE;
+                    if(GetMouseX() >= noButtonPos.x && GetMouseX() <= noButtonPos.x + noTextSize.x &&
+                       GetMouseY() >= noButtonPos.y && GetMouseY() <= noButtonPos.y + noTextSize.y)
+                    {
+                        noButtonCol = olc::BLUE;
+                        if(GetMouse(0).bPressed) {
+                            ExitAttempt = false;
+                        }
+                    }
+                    
+                    FillRect(PopUpPos, PopUpSize, olc::VERY_DARK_GREY);
+                    DrawString(PopUpPos, QueryText, olc::WHITE, TextScale);
+                    DrawString(yesButtonPos, YesButton, yesButtonCol, TextScale);
+                    DrawString(noButtonPos, NoButton, noButtonCol, TextScale);
+                }
+                
             } break;
             
             case GAME_STATE_EDITOR: {
@@ -206,6 +260,8 @@ class TheGreatMachine : public olc::PixelGameEngine
         }
         return true;
     }
+    
+    bool ExitAttempt = false;
     
     void DrawUI()
     {
