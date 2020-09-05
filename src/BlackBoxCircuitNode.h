@@ -75,16 +75,27 @@ struct BlackBoxCircuitNode : public CircuitNode {
         return 0;
     }
     
-    bool ConnectChild(CircuitNode *node) override
+    bool CanConnectChild(CircuitNode * node) override
     {
+        bool Result = true;
         if (node == this || node->HasChildRecursive(this)) {
-            return false;
+            Result = false;
+        }
+        if (!node) {
+            Result = false;
         }
         
-        if (node) {
+        return Result;
+    }
+    
+    bool ConnectChild(CircuitNode *node) override
+    {
+        bool result = CanConnectChild(node);
+        if (result) {
             Input.push_back(node);
+            node->parents.push_back(this);
         }
-        return true;
+        return result;
     };
     
     bool HasChildRecursive(CircuitNode *node) override

@@ -41,13 +41,13 @@ struct CircuitNode {
     virtual olc::vi2d GetConnectionPoint(CircuitNode *parent) {
         return pos + SpriteSize + olc::vi2d{(int)SpriteSize.x, 0};
     }
+    
     void DrawConnectorLine(olc::vi2d Start, olc::vi2d End, olc::Pixel lineColor)
     {
         pge->DrawLine(Start, Start - olc::vi2d{10, 0}, lineColor);
         pge->DrawLine(Start - olc::vi2d{10, 0}, End + olc::vi2d{10, 0}, lineColor);
         pge->DrawLine(End, End + olc::vi2d{10, 0}, lineColor);
     }
-    
     
     virtual void Draw(olc::Pixel TintCol = olc::WHITE)
     {
@@ -79,6 +79,7 @@ struct CircuitNode {
     virtual void OnClickEvent() {};
     
     virtual bool Evaluate(CircuitNode * callingParent) = 0;
+    virtual bool CanConnectChild(CircuitNode *node) = 0;
     virtual bool ConnectChild(CircuitNode *node) = 0;
     virtual bool HasChildRecursive(CircuitNode *node) = 0;
     

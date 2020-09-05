@@ -130,7 +130,16 @@ struct CircuitEditor {
             }
             
             if (FirstClick) {
-                pge->DrawLine(FirstClick->pos + FirstClick->SpriteSize, pge->GetMousePos());
+                olc::Pixel lineColor = olc::WHITE;
+                CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
+                if(node) {
+                    if (node->CanConnectChild(FirstClick)) {
+                        lineColor = olc::GREEN;
+                    } else {
+                        lineColor = olc::RED;
+                    }
+                }
+                pge->DrawLine(FirstClick->pos + FirstClick->SpriteSize, pge->GetMousePos(), lineColor);
             }
             if (FirstClick && pge->GetMouse(1).bPressed) {
                 FirstClick = 0;

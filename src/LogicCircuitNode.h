@@ -95,21 +95,30 @@ struct LogicCircuitNode : public CircuitNode {
         return 0;
     }
     
-    bool ConnectChild(CircuitNode *node) override
+    bool CanConnectChild(CircuitNode *node) override
     {
-        bool result = false;
-        if (node == this || node->HasChildRecursive(this)) {
-            return false;
+        bool result = true;
+        
+        if (!(!Input[0] || (!Input[1] && type != LOGIC_BUFFER && type != LOGIC_NOT))) {
+            result = false;
         }
         
-        if (!Input[0]) {
-            Input[0] = node;
-            result = true;
-        } else if (type != LOGIC_BUFFER && type != LOGIC_NOT && !Input[1]) {
-            Input[1] = node;
-            result = true;
+        if (node == this || node->HasChildRecursive(this)) {
+            result = false;
         }
+        
+        return result;
+    }
+    
+    bool ConnectChild(CircuitNode *node) override
+    {
+        bool result = CanConnectChild(node);
         if (result) {
+            if (!Input[0]) {
+                Input[0] = node;
+            } else if (type != LOGIC_BUFFER && type != LOGIC_NOT && !Input[1]) {
+                Input[1] = node;
+            }
             node->parents.push_back(this);
         }
         return result;

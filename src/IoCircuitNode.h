@@ -67,20 +67,34 @@ struct IoCircuitNode : public CircuitNode {
         return 0;
     }
     
-    bool ConnectChild(CircuitNode *node) override
+    bool CanConnectChild(CircuitNode *node) override
     {
-        bool result = false;
-        if (node == this || node->HasChildRecursive(this)) {
-            return false;
-        }
+        bool Result = false;
         
         if (type == IO_LED && !Input) {
-            Input = node;
-            result = true;
+            Result = true;
         }
+        
+        if (!node) {
+            Result = false;
+        }
+        
+        if (node == this || node->HasChildRecursive(this)) {
+            Result = false;
+        }
+        
+        return Result;
+    }
+    
+    bool ConnectChild(CircuitNode *node) override
+    {
+        bool result = CanConnectChild(node);
         if (result) {
+            result = true;
+            Input = node;
             node->parents.push_back(this);
         }
+        
         return result;
     }
     
