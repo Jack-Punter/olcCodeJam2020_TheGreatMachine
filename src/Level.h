@@ -177,7 +177,7 @@ struct Level {
         }
         
         if(ShowTruthTable) {
-            if(ImGui::Begin("Truth Table")) {
+            if(ImGui::Begin("Truth Table", &ShowTruthTable)) {
                 std::string str = "";
                 for (int y = 0; y < TruthTableHeight; ++y) {
                     for (int x = 0; x < TruthTableWidth; ++x) {

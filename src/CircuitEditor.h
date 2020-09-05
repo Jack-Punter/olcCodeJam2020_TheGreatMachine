@@ -138,7 +138,7 @@ struct CircuitEditor {
                 olc::Pixel lineColor = olc::WHITE;
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
                 if(node) {
-                    if (node->CanConnectChild(FirstClick)) {
+                    if (node->CanConnectChild(FirstClick) && node->SpriteIndex != (int)LOGIC_NONE) {
                         lineColor = olc::GREEN;
                     } else {
                         lineColor = olc::RED;
