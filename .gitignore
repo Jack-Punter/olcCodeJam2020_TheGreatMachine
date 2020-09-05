@@ -8,6 +8,8 @@
 *.dbg
 *.lib
 *.exp
+*.so
+*.o
 build/
 
 wtcmd.lnk
