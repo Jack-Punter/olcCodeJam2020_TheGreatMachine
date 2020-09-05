@@ -288,6 +288,11 @@ class TheGreatMachine : public olc::PixelGameEngine
             } break;
             
             case GAME_STATE_EDITOR: {
+                SetDrawTarget(BGLayer);
+                float ScaleX = (float)(ScreenWidth() - 300) / (float)TheGreatMachineImage->Sprite()->width;
+                float ScaleY = (float)ScreenHeight() / (float)TheGreatMachineImage->Sprite()->height;
+                DrawDecal({0.0f, 0.0f}, TheGreatMachineImage->Decal(), {ScaleX, ScaleY}, olc::Pixel(255, 255, 255, 32));
+                SetDrawTarget(GameLayer);
                 ActiveLevel->OnUserUpdate(fElapsedTime);
                 if(GetKey(olc::ESCAPE).bPressed) {
                     GameState = GAME_STATE_LEVEL_SELECT;
