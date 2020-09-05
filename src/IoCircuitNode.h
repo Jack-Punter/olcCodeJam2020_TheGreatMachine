@@ -105,6 +105,7 @@ struct IoCircuitNode : public CircuitNode {
         std::vector<CircuitNode *> Result;
         if (Input) {
             if (Input->IsStatic) {
+                RemoveErase(&Input->parents, this);
                 Result.push_back(Input);
                 Input = 0;
             } else {

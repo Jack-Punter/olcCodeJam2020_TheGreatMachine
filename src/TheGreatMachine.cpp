@@ -226,7 +226,7 @@ class TheGreatMachine : public olc::PixelGameEngine
             }
             
             if (ShowControls) {
-                if(ImGui::Begin("Controls", &ShowControls)) {
+                if(ImGui::Begin("Controls", &ShowControls, ImGuiWindowFlags_NoDocking)) {
                     ImGui::TextWrapped("Editor Controls Window:\n"
                                        "Use the \"Control Modes\" list to select control mode.\n\n"
                                        "PLACE_COMPONENTS: Select a compnent from one of the components list. Left Click in the world to place. (Hold CTRL to place multiple ,Right click to cancel).\nClick on a node in the world to move it. (Right Click to cancel)\n\n"

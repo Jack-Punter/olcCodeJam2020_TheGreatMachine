@@ -105,30 +105,8 @@ struct BlackBoxCircuitNode : public CircuitNode {
     
     std::vector<CircuitNode *> RemoveStaticChildrenRecursive()
     {
+        // NOTE(jack): This code doesn't ever get called as Black Boxes are always static
         std::vector<CircuitNode *> Result;
-        std::vector<CircuitNode *>::iterator oldEnd = std::end(Result);
-        std::vector<CircuitNode *>::iterator newEnd = std::end(Result);
-        
-        for(auto It = std::begin(Input); It !=  newEnd;)
-        {
-            if ((*It)->IsStatic) {
-                Result.push_back(*It);
-                newEnd = std::remove(std::begin(Result), oldEnd, *It);
-                // If we have not removed an element we dont increment so we dont skip an input
-                if (newEnd == oldEnd) {
-                    ++It;
-                } else {
-                    oldEnd = newEnd;
-                }
-            } else {
-                std::vector<CircuitNode *> tmp = (*It)->RemoveStaticChildrenRecursive();
-                Result.reserve(Result.size() + tmp.size());
-                Result.insert(std::end(Result), std::begin(tmp), std::end(tmp));
-                ++It;
-            }
-        }
-        // erase all of the removed Inputs
-        Input.erase(newEnd, std::end(Input));
         return Result;
     }
 };

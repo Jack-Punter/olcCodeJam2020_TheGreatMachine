@@ -3,7 +3,7 @@
 
 struct LogicCircuitNode : public CircuitNode {
     LogicComponent type;
-    CircuitNode *Input[2] = {};
+    CircuitNode *Input[2] = { 0 };
     
     ~LogicCircuitNode() override
     {
@@ -130,6 +130,7 @@ struct LogicCircuitNode : public CircuitNode {
         std::vector<CircuitNode *> Result;
         if (Input[0]) {
             if (Input[0]->IsStatic) {
+                RemoveErase(&Input[0]->parents, this);
                 Result.push_back(Input[0]);
                 Input[0] = 0;
             }
@@ -139,8 +140,9 @@ struct LogicCircuitNode : public CircuitNode {
                 Result.insert(std::end(Result), std::begin(tmp), std::end(tmp));
             }
         }
-        if(Input[1]) {
+        if(Input[1] && type != LOGIC_BUFFER && type != LOGIC_NOT) {
             if (Input[1]->IsStatic) {
+                RemoveErase(&Input[1]->parents, this);
                 Result.push_back(Input[1]);
                 Input[1] = 0;
             }
@@ -158,7 +160,7 @@ struct LogicCircuitNode : public CircuitNode {
         if(Input[0]) {
             result.push_back(Input[0]);
         }
-        if(Input[1] && Input[1] != Input[0]) {
+        if(Input[1] && Input[1] != Input[0] && type != LOGIC_BUFFER && type != LOGIC_NOT) {
             result.push_back(Input[1]);
         }
         return result;

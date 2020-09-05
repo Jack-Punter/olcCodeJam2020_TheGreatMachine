@@ -25,6 +25,11 @@ struct CircuitEditor {
             if ((CurrentLogicComponent != LOGIC_NONE) || (CurrentIoComponent != IO_NONE))
             {
                 if (!NewNode) {
+                    if (FirstClick) {
+                        FirstClick->pos = FirstClickPos;
+                        FirstClick->Held = false;
+                        FirstClick = 0;
+                    }
                     if (CurrentLogicComponent != LOGIC_NONE) {
                         printf("Allocating %s node\n", LogicComponentStrings[(int)CurrentLogicComponent]);
                         NewNode = CreateHeldNode<LogicCircuitNode>(pge, CurrentLogicComponent, LogicComponentSize,
@@ -199,7 +204,24 @@ struct CircuitEditor {
             
             ImGui::Text("Control Modes:");
             ImGui::PushItemWidth(-1);
+            ControlMode OldControlMode = CurrentControlMode;
             ImGui::ListBox("ControlModes", (int *)&CurrentControlMode, ControlModeStrings, ArrayCount(ControlModeStrings), ArrayCount(ControlModeStrings));
+            
+            if (OldControlMode != CurrentControlMode) {
+                if(NewNode) {
+                    delete NewNode;
+                    NewNode = 0;
+                }
+                if (FirstClick) {
+                    if (OldControlMode == PLACE_COMPONENTS) {
+                        FirstClick->pos = FirstClickPos;
+                        FirstClick->Held = false;
+                    }
+                    FirstClick = 0;
+                }
+            }
+            
+            
             if(CurrentControlMode == PLACE_COMPONENTS)
             {
                 ImGui::Text("Logic Components:");
@@ -241,7 +263,7 @@ struct CircuitEditor {
     
     void ClearEditor() {
         for (int i = 0; i < CircuitTrees.size(); ++i) {
-            CircuitNode **pnode = &CircuitTrees[i];
+            CircuitNode * *pnode = &CircuitTrees[i];
             if (!(*pnode)->IsStatic) {
                 std::vector<CircuitNode *> tmp = (*pnode)->RemoveStaticChildrenRecursive();
                 CircuitTrees.reserve(CircuitTrees.size() + tmp.size());
@@ -254,12 +276,13 @@ struct CircuitEditor {
                 for(CircuitNode *t : tmp) {
                     if(!t->IsStatic) {
                         (*pnode)->RemoveInput(t);
-                        delete t;
+                        t->RemoveParent(*pnode);
+                        CircuitTrees.push_back(t);
                     }
                 }
             }
-            RemoveErase(&CircuitTrees, nullptr);
         }
+        RemoveErase(&CircuitTrees, nullptr);
     };
     
     void ClearEditorNonStatic() {
