@@ -7,10 +7,10 @@ struct CircuitEditor {
     {
         pge = _pge;
         LogicComponentRenderable = new olc::Renderable;
-        LogicComponentRenderable->Load("..\\misc\\LogicComponents.png");
+        LogicComponentRenderable->Load("../misc/LogicComponents.png");
         
         IoComponentRenderable = new olc::Renderable;
-        IoComponentRenderable->Load("..\\misc\\IOComponents.png");
+        IoComponentRenderable->Load("../misc/IOComponents.png");
     }
     
     CircuitNode *NewNode = 0;
