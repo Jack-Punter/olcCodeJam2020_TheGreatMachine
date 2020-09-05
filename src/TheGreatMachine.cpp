@@ -1,7 +1,7 @@
 #include "olcPixelGameEngine.h"
-#include "pge\imgui_impl_pge.h"
-#include "imgui\imgui.h"
-#include "imgui\imgui_impl_opengl2.h"
+#include "pge/imgui_impl_pge.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl2.h"
 #define Assert(x) {if(!(x)) *(int*)nullptr = 0;}
 #define ArrayCount(x) (sizeof(x)/sizeof(x[0]))
 
@@ -11,20 +11,18 @@ inline void RemoveErase(Container* container, T value) {
     container->erase(NewEnd, std::end(*container));
 }
 
-#include "generated\generated.h"
+#include "generated/generated.h"
 #include "CircuitEditor.h"
 #include "CircuitNode.h"
 #include "Level.h"
-#include "generated\AndLevel.h"
-#include "generated\OrLevel.h"
-#include "generated\XorLevel.h"
-#include "generated\NandLevel.h"
-#include "generated\NorLevel.h"
-#include "generated\XnorLevel.h"
-#include "generated\NotLevel.h"
-#include "generated\FullAdderLevel.h"
-
-//#include "generated\FullAdderLevel.h"
+#include "generated/AndLevel.h"
+#include "generated/OrLevel.h"
+#include "generated/XorLevel.h"
+#include "generated/NandLevel.h"
+#include "generated/NorLevel.h"
+#include "generated/XnorLevel.h"
+#include "generated/NotLevel.h"
+#include "generated/FullAdderLevel.h"
 
 #include <algorithm>
 
@@ -64,7 +62,7 @@ class TheGreatMachine : public olc::PixelGameEngine
         EnableLayer(GameLayer, true);
         
         TheGreatMachineImage = new olc::Renderable;
-        TheGreatMachineImage->Load("..\\misc\\TheGreatMachine.png");
+        TheGreatMachineImage->Load("../misc/TheGreatMachine.png");
         
         BGLayer = CreateLayer();
         EnableLayer(BGLayer, true);

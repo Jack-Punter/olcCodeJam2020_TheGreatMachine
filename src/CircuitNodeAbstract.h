@@ -1,7 +1,7 @@
 #ifndef CICRUIT_NODE_ABSTRACT_H
 #define CICRUIT_NODE_ABSTRACT_H
 
-#include "generated\generated.h"
+#include "generated/generated.h"
 #include "olcPixelGameEngine.h"
 #include <vector>
 #include <optional>

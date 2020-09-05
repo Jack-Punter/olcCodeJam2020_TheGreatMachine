@@ -199,8 +199,8 @@ int main() {
 #define _OLC_PGEX_IMGUI_IMPL_PGE_H_
 
 #include <vector>
-#include "..\imgui\imgui.h"
-#include "..\olcPixelGameEngine.h"
+#include "../imgui/imgui.h"
+#include "../olcPixelGameEngine.h"
 
 
 namespace olc

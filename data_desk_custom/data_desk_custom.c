@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include "..\data_desk\source\data_desk.h"
+#include "../data_desk/source/data_desk.h"
 
 static FILE *global_header_file = 0;
 
 DATA_DESK_FUNC void
 DataDeskCustomInitCallback(void)
 {
-	global_header_file = fopen("generated\\generated.h", "w");
+	global_header_file = fopen("generated//generated.h", "w");
     fprintf(global_header_file, "#ifndef GENERATED_GENERATED_H\n");
     fprintf(global_header_file, "#define GENERATED_GENERATED_H\n");
     
