@@ -70,7 +70,6 @@ def generate(inputs, outputs, level_code, validate_filename):
         file.write("        BlackBox->IsStatic = true;\n")
         file.write("        BlackBox->pge = pge;\n")
         file.write("        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), " + f"(Input1->pos.y + (Input{inputs}->pos.y + 2 * (int)Input{inputs}->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y" + "};\n")
-				  f"(Input1->pos.y + (Input{inputs}->pos.y + 2 * (int)Input{inputs}->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y" + "};\n")
         file.write("        BlackBox->SpriteSheet = editor.LogicComponentRenderable;\n")
         file.write("        BlackBox->SpriteSize = editor.LogicComponentSize;\n")
         file.write("        BlackBox->Held = false;\n")

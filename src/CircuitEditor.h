@@ -101,8 +101,8 @@ struct CircuitEditor {
                         CanOutput = false;
                     }
                 }
-                if (node && CanOutput && node->SpriteIndex != (int)LOGIC_NONE) {
-                    if(!FirstClick) {
+                if (node && node->SpriteIndex != (int)LOGIC_NONE) {
+                    if(!FirstClick && CanOutput) {
                         FirstClick = node;
                     } else  {
                         if(node->ConnectChild(FirstClick)){

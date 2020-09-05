@@ -15,6 +15,8 @@ inline void RemoveErase(Container* container, T value) {
 #include "CircuitEditor.h"
 #include "CircuitNode.h"
 #include "Level.h"
+
+// ================ SimpleLevels ================
 #include "generated/AndLevel.h"
 #include "generated/OrLevel.h"
 #include "generated/XorLevel.h"
@@ -22,7 +24,19 @@ inline void RemoveErase(Container* container, T value) {
 #include "generated/NorLevel.h"
 #include "generated/XnorLevel.h"
 #include "generated/NotLevel.h"
+
+// ================ MediumLevels ================
 #include "generated/FullAdderLevel.h"
+#include "generated/MultiPlexerLevel.h"
+#include "generated/Medium3Level.h"
+#include "generated/Medium4Level.h"
+#include "generated/Medium5Level.h"
+
+// ================= HardLevels =================
+#include "generated/Hard1Level.h"
+#include "generated/Hard2Level.h"
+#include "generated/Hard3Level.h"
+
 
 #include <algorithm>
 
@@ -95,7 +109,29 @@ class TheGreatMachine : public olc::PixelGameEngine
         Levels.push_back(new FullAdderLevel);
         Levels.back()->OnUserCreate(this);
         
+        Levels.push_back(new MultiPlexerLevel);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new Medium3Level);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new Medium4Level);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new Medium5Level);
+        Levels.back()->OnUserCreate(this);
+        
+        
         // ================= HardLevels =================
+        Levels.push_back(new Hard1Level);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new Hard2Level);
+        Levels.back()->OnUserCreate(this);
+        
+        Levels.push_back(new Hard3Level);
+        Levels.back()->OnUserCreate(this);
+        
         
         Levels.push_back(new SandboxLevel);
         Levels.back()->OnUserCreate(this);
