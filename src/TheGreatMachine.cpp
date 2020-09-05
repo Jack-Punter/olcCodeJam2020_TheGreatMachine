@@ -284,8 +284,7 @@ int main(int argc, char *argv[])
     }
     
     if(argc == 2) {
-        if(strcmp(argv[1], "true") == 0)
-        {
+        if(strcmp(argv[1], "true") == 0) {
             fullScreen = true;
         }
     }

@@ -31,11 +31,9 @@ struct CircuitEditor {
                         FirstClick = 0;
                     }
                     if (CurrentLogicComponent != LOGIC_NONE) {
-                        printf("Allocating %s node\n", LogicComponentStrings[(int)CurrentLogicComponent]);
                         NewNode = CreateHeldNode<LogicCircuitNode>(pge, CurrentLogicComponent, LogicComponentSize,
                                                                    LogicComponentRenderable);
                     } else if (CurrentIoComponent != IO_NONE) {
-                        printf("Allocating %s node\n", IoComponentStrings[(int)CurrentIoComponent]);
                         NewNode = CreateHeldNode<IoCircuitNode>(pge, CurrentIoComponent, IoComponentSize,
                                                                 IoComponentRenderable);
                     }

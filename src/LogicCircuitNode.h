@@ -7,7 +7,6 @@ struct LogicCircuitNode : public CircuitNode {
     
     ~LogicCircuitNode() override
     {
-        printf("Deleting %s Node\n", LogicComponentStrings[(int)type]);
         RemoveFromParents();
         if (Input[0]) {
             Input[0]->RemoveParent(this);

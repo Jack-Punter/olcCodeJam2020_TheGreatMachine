@@ -6,7 +6,6 @@ struct IoCircuitNode : public CircuitNode {
     CircuitNode* Input = {};
     ~IoCircuitNode() override
     {
-        printf("Deleting %s Node\n", IoComponentStrings[(int)type]);
         RemoveFromParents();
         if (Input) {
             Input->RemoveParent(this);
