@@ -97,6 +97,9 @@ struct LogicCircuitNode : public CircuitNode {
     bool CanConnectChild(CircuitNode *node) override
     {
         bool result = true;
+        if (!node) {
+            return false;
+        }
         
         if (!(!Input[0] || (!Input[1] && type != LOGIC_BUFFER && type != LOGIC_NOT))) {
             result = false;

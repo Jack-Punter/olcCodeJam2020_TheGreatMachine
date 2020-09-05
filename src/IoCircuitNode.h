@@ -75,12 +75,11 @@ struct IoCircuitNode : public CircuitNode {
         
         if (!node) {
             Result = false;
+        } else {
+            if (node == this || node->HasChildRecursive(this)) {
+                Result = false;
+            }
         }
-        
-        if (node == this || node->HasChildRecursive(this)) {
-            Result = false;
-        }
-        
         return Result;
     }
     
