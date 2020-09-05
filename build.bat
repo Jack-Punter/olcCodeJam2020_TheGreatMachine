@@ -1,6 +1,6 @@
 @echo off
 
-set CommonCompilerFlags=-MT -nologo -Zi -FC -GR- -EHa -Od -Oi -W3 -std:c++17
+set CommonCompilerFlags=-MT -nologo -Zi -FC -EHa -Od -Oi -W3 -std:c++17
 
 set CommonLinkerFlags=
 

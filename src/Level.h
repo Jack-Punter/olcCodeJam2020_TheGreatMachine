@@ -152,6 +152,14 @@ struct Level {
         
         if (ShowLevelControls) {
             if (ImGui::Begin("Simulation")){
+                char levelText[128] = { 0 };
+                strcpy_s(levelText, 128, LevelName);
+                for(int i = 0; i < strlen(levelText); ++i) {
+                    if (levelText[i] == '\n') {
+                        levelText[i] = ' ';
+                    }
+                }
+                ImGui::Text(levelText);
                 ImGui::Text(LevelCompleted ? "Congratulations: Level Complete!" : "This level has not yet been completed");
                 
                 if (!IsEvaluating && !IsSimulating) {

@@ -39,7 +39,6 @@ struct IoCircuitNode : public CircuitNode {
         }
     }
     
-    
     std::vector<CircuitNode *> IntersectionsWithRect(olc::vf2d tLeft, olc::vf2d bRight) override
     {
         std::vector<CircuitNode *> Collisions;

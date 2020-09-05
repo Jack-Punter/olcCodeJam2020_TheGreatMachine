@@ -94,7 +94,14 @@ struct CircuitEditor {
         {
             if(pge->GetMouse(0).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
-                if (node && node->SpriteIndex != (int)LOGIC_NONE) {
+                bool CanOutput = true;
+                IoCircuitNode *IoNode = dynamic_cast<IoCircuitNode *>(node);
+                if(IoNode) {
+                    if (IoNode->type == IO_LED) {
+                        CanOutput = false;
+                    }
+                }
+                if (node && CanOutput && node->SpriteIndex != (int)LOGIC_NONE) {
                     if(!FirstClick) {
                         FirstClick = node;
                     } else  {
