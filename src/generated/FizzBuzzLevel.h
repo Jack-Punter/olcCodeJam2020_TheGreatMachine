@@ -26,8 +26,8 @@ struct FizzBuzzLevel : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Very Hard 3:\nImpossible";
-        LevelCompleteName = "Very Hard 3\nImpossible\nFizzBuzz";
+        LevelName = "Very Hard 3:\nImpossible?";
+        LevelCompleteName = "Very Hard 3\nPossible!\nFizzBuzz";
         
         int InputCenteringYOffset = 0;
         int OutputCenteringYOffset = 2;
