@@ -5,27 +5,31 @@ struct BlackBoxHard1 : public BlackBoxCircuitNode {
     /* Number of inputs: 5 */
     /* Number of outputs: 5 */
 
-    bool Evaluate(CircuitNode * callingParent) override {
+	bool Evaluate(CircuitNode * callingParent) override {
         bool a = SafeEval(Input[0], this);
         bool b = SafeEval(Input[1], this);
         bool c = SafeEval(Input[2], this);
         bool d = SafeEval(Input[3], this);
         bool e = SafeEval(Input[4], this);
-        if(callingParent == parents[0]) {
-            return a && !b && c && !d && e;
+        bool out1 = a && b;
+        bool out3 = (c != d);
+        bool out5 = d || e;        
+        if (callingParent == parents[0]) {
+            return out1;
         } else if (callingParent == parents[1]) {
-            return (a == b) && (c == d) && !e;
+            return out1 || out3;
         } else if (callingParent == parents[2]) {
-            return !a && (b != c) && (d || e);
+            return out3;
         } else if (callingParent == parents[3]) {
-            return true;
+            return out3 && out5;
         } else if (callingParent == parents[4]) {
-            return (a && b && c) || e;
+            return out5;
         } else {
             Assert(true);
             return false;
-        }           
+        }
     }
+    
 };
 
 struct Hard1Level : public Level {

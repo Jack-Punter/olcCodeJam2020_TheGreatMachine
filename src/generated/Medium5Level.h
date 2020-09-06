@@ -11,23 +11,20 @@ struct BlackBoxMedium5 : public BlackBoxCircuitNode {
         bool c = SafeEval(Input[2], this);
         bool d = SafeEval(Input[3], this);
         bool e = SafeEval(Input[4], this);
-        bool out1 = a && b;
-        bool out3 = (c != d);
-        bool out5 = d || e;        
-        if (callingParent == parents[0]) {
-            return out1;
+        if(callingParent == parents[0]) {
+            return a && !b && c && !d && e;
         } else if (callingParent == parents[1]) {
-            return out1 || out3;
+            return (a == b) && (c == d) && !e;
         } else if (callingParent == parents[2]) {
-            return out3;
+            return !a && (b != c) && (d || e);
         } else if (callingParent == parents[3]) {
-            return out3 && out5;
+            return true;
         } else if (callingParent == parents[4]) {
-            return out5;
+            return (a && b && c) || e;
         } else {
             Assert(true);
             return false;
-        }
+        }           
     }
 };
 
