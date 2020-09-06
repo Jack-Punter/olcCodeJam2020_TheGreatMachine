@@ -32,8 +32,9 @@ struct CircuitNode {
     }
     
     void RemoveFromParents() {
-        for (CircuitNode *n : parents) {
-            n->RemoveInput(this);
+        while (0 < parents.size()) {
+            CircuitNode ** pNode = &parents[0];
+            (*pNode)->RemoveInput(this);
         }
     }
     

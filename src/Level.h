@@ -89,7 +89,7 @@ struct Level {
         editor.OnUserUpdate(fElapsedTime);
         
         if (IsEvaluating) {
-            StartTimeBetweenSimulationStates = std::min(30.0f / (float)exp2(Inputs.size()), 0.5f);
+            StartTimeBetweenSimulationStates = std::min(20.0f / (float)exp2(Inputs.size()), 0.5f);
             TimeBetweenSimulationStates -= fElapsedTime;
             if(TimeBetweenSimulationStates <= 0.0f) {
                 std::pair<bool, bool> R = AsyncValidateGen();
@@ -97,13 +97,13 @@ struct Level {
                 if(!R.first) {
                     IsEvaluating = false;
                 }
-                LevelCompleted = (R.second && R.first);
+                LevelCompleted = (R.second && R.first);\
                 TimeBetweenSimulationStates = StartTimeBetweenSimulationStates;
             }
         }
         
         if (IsSimulating) {
-            StartTimeBetweenSimulationStates = std::min(30.0f / (float)exp2(Inputs.size()), 0.5f);
+            StartTimeBetweenSimulationStates = std::min(20.0f / (float)exp2(Inputs.size()), 0.5f);
             TimeBetweenSimulationStates -= fElapsedTime;
             if(TimeBetweenSimulationStates <= 0.0f) {
                 if (AsyncSimulateGen()) {

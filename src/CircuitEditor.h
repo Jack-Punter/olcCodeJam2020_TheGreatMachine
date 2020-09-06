@@ -108,8 +108,10 @@ struct CircuitEditor {
                     } else  {
                         if(node->ConnectChild(FirstClick)){
                             RemoveErase(&CircuitTrees, FirstClick);
-                            //Reset the clicks#
-                            FirstClick  = 0;
+                            //Reset the clicks
+                            if(!pge->GetKey(olc::CTRL).bHeld) {
+                                FirstClick  = 0;
+                            }
                         }
                     }
                 }
@@ -181,6 +183,7 @@ struct CircuitEditor {
             std::vector<CircuitNode *> children = node->GetChildren();
             CircuitTrees.reserve(CircuitTrees.size() + children.size());
             CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
+            
             for(auto* c : children) {
                 c->RemoveParent(node);
                 node->RemoveInput(c);
