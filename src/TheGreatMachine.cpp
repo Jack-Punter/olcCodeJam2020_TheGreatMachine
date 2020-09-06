@@ -395,11 +395,6 @@ class TheGreatMachine : public olc::PixelGameEngine
 int main(int argc, char *argv[])
 {
     bool fullScreen = false;
-    printf("argc: %d\n", argc);
-    for(int i = 0; i < argc; ++ i) {
-        printf("argv[%d]: %s\n", i, argv[i]);
-    }
-    
     if(argc == 2) {
         if(strcmp(argv[1], "true") == 0) {
             fullScreen = true;
