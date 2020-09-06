@@ -24,8 +24,8 @@ struct Hard2Level : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Hard 4\n(4 - 1)";
-        LevelCompleteName = "Hard 4\n(4 - 1)\nPrimes";
+        LevelName = "Hard 2\n(4 - 1)";
+        LevelCompleteName = "Hard 2\n(4 - 1)\nPrimes";
         
         int InputCenteringYOffset = 0;
         int OutputCenteringYOffset = 3;
