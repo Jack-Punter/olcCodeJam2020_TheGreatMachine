@@ -348,10 +348,10 @@ class TheGreatMachine : public olc::PixelGameEngine
                 if(ImGui::Begin("Controls", &ShowControls, ImGuiWindowFlags_NoDocking)) {
                     ImGui::TextWrapped("Editor Controls Window:\n"
                                        "Use the \"Control Modes\" list to select control mode.\n\n"
-                                       "PLACE_COMPONENTS: Select a compnent from one of the components list. Left Click in the world to place. (Hold CTRL to place multiple ,Right click to cancel).\nClick on a node in the world to move it. (Right Click to cancel)\n\n"
-                                       "PLACE_CONNECTIONS: Click on a component, then click on the component you want to connect it to. The component which is taking the input must be the second click. Right Click to remove all connections to a component.\n\n"
+                                       "PLACE_COMPONENTS: Select a component from one of the component lists. Left Click in the world to place. (Hold CTRL to place multiple, Right click to cancel).\nClick on a node in the world to move it. (Right Click to cancel)\n\n"
+                                       "PLACE_CONNECTIONS: Click on a component, then click on the component you want to connect it to (Hold Control to do multiple connections from the first component selected). The component which is taking the input must be the second click. Right Click to remove all connections to and from a component.\n\n"
                                        "INTERACT: Click to toggle the values of the \"IO_BIT\" components.\n\n"
-                                       "DELETE_COMPONENTS: Click a component to detete it (Hold CTRL to also delete all of its children). Right Click to delete all connections to a component.\n\n"
+                                       "DELETE_COMPONENTS: Click a component to delete it (Hold CTRL to also delete all of its children). Right Click to delete all connections to a component.\n\n"
                                        "Simulation Window:\n"
                                        "This window tells you whether the level has been completed.\nThe \"Evaluate\" button tests your circuit and will halt on the first failed state.\nThe \"Simulate\" button runs a full input sequence without halting. (This does NOT check if the level is complete! Use \"Evaluate\" for this)");
                 }
