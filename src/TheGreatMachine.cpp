@@ -239,7 +239,7 @@ class TheGreatMachine : public olc::PixelGameEngine
                 
                 if (ExitAttempt) {
                     int TextScale = 3;
-                    const char *QueryText = "Are you sure you want to exit.";
+                    const char *QueryText = "Are you sure you want to exit?";
                     const char *YesButton = "Yes";
                     const char *NoButton = "No";
                     olc::vi2d QueryTextSize = GetTextSize(QueryText) * TextScale;

@@ -6,6 +6,7 @@ struct CircuitEditor {
     void OnUserCreate(olc::PixelGameEngine *_pge)
     {
         pge = _pge;
+        
         LogicComponentRenderable = new olc::Renderable;
         LogicComponentRenderable->Load("../misc/LogicComponents.png");
         
@@ -116,22 +117,7 @@ struct CircuitEditor {
             
             if(!FirstClick && pge->GetMouse(1).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
-                if(node && !node->IsStatic) {
-                    std::vector<CircuitNode *> children = node->GetChildren();
-                    CircuitTrees.reserve(CircuitTrees.size() + children.size());
-                    CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
-                    for(auto* c : children) {
-                        c->RemoveParent(node);
-                        node->RemoveInput(c);
-                    }
-                    // NOTE(jack): If Ctrl is pressed and the node is not a root, add it as a root
-                    // and remove it from its parents;
-                    if (std::find(std::begin(CircuitTrees), std::end(CircuitTrees), node) == std::end(CircuitTrees))
-                    {
-                        node->RemoveFromParents();
-                        CircuitTrees.push_back(node);
-                    }
-                }
+                RemoveConnections(node);
             }
             
             if (FirstClick) {
@@ -185,22 +171,26 @@ struct CircuitEditor {
             }
             if (pge->GetMouse(1).bPressed) {
                 CircuitNode *node = GetNodeAtLocation(pge->GetMousePos());
-                if(node) {
-                    std::vector<CircuitNode *> children = node->GetChildren();
-                    CircuitTrees.reserve(CircuitTrees.size() + children.size());
-                    CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
-                    for(auto* c : children) {
-                        c->RemoveParent(node);
-                        node->RemoveInput(c);
-                    }
-                    // NOTE(jack): If Ctrl is pressed and the node is not a root, add it as a root
-                    // and remove it from its parents;
-                    if (std::find(std::begin(CircuitTrees), std::end(CircuitTrees), node) == std::end(CircuitTrees))
-                    {
-                        node->RemoveFromParents();
-                        CircuitTrees.push_back(node);
-                    }
-                }
+                RemoveConnections(node);
+            }
+        }
+    }
+    
+    void RemoveConnections(CircuitNode * node) {
+        if(node && (!node->IsStatic)) {
+            std::vector<CircuitNode *> children = node->GetChildren();
+            CircuitTrees.reserve(CircuitTrees.size() + children.size());
+            CircuitTrees.insert(std::end(CircuitTrees), std::begin(children), std::end(children));
+            for(auto* c : children) {
+                c->RemoveParent(node);
+                node->RemoveInput(c);
+            }
+            // NOTE(jack): If Ctrl is pressed and the node is not a root, add it as a root
+            // and remove it from its parents;
+            if (std::find(std::begin(CircuitTrees), std::end(CircuitTrees), node) == std::end(CircuitTrees))
+            {
+                node->RemoveFromParents();
+                CircuitTrees.push_back(node);
             }
         }
     }

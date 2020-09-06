@@ -76,6 +76,10 @@ struct IoCircuitNode : public CircuitNode {
         if (!node) {
             Result = false;
         } else {
+            IoCircuitNode *IoNode = dynamic_cast<IoCircuitNode *>(node);
+            if (IoNode && IoNode->type == IO_BIT) {
+                Result = false;
+            }
             if (node == this || node->HasChildRecursive(this)) {
                 Result = false;
             }
