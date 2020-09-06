@@ -1,7 +1,7 @@
-#ifndef LEVEL_MultiPlexer2
-#define LEVEL_MultiPlexer2
+#ifndef LEVEL_TheGreatMachine
+#define LEVEL_TheGreatMachine
 
-struct BlackBoxMultiPlexer2 : public BlackBoxCircuitNode {
+struct BlackBoxTheGreatMachine : public BlackBoxCircuitNode {
     /* Number of inputs: 6 */
     /* Number of outputs: 1 */
     
@@ -12,23 +12,23 @@ struct BlackBoxMultiPlexer2 : public BlackBoxCircuitNode {
         bool d = SafeEval(Input[3], this);
         bool e = SafeEval(Input[4], this);
         bool f = SafeEval(Input[5], this);
-        int nSelect = (a?2:0) + (b?1:0);
+        int nSelect = (e?2:0) + (f?1:0);
         if (callingParent == parents[0]) {
             switch (nSelect) {
                 case 0: {
-                    return c;
+                    return a;
                 } break;
                 
                 case 1: {
-                    return d;
+                    return b;
                 } break;
                 
                 case 2: {
-                    return e;
+                    return c;
                 } break;
                 
                 case 3: {
-                    return f;
+                    return d;
                 } break;
                 
                 default: {
@@ -43,7 +43,7 @@ struct BlackBoxMultiPlexer2 : public BlackBoxCircuitNode {
     }
 };
 
-struct MultiPlexer2Level : public Level {
+struct TheGreatMachineLevel : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
@@ -84,7 +84,7 @@ struct MultiPlexer2Level : public Level {
         Input6->IsStatic = true;
         Input6->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (10 + InputCenteringYOffset)};
         
-        CircuitNode *BlackBox = new BlackBoxMultiPlexer2();
+        CircuitNode *BlackBox = new BlackBoxTheGreatMachine();
         BlackBox->SpriteIndex = (int)LOGIC_NONE;
         BlackBox->IsStatic = true;
         BlackBox->pge = pge;
@@ -161,4 +161,4 @@ struct MultiPlexer2Level : public Level {
     }
 };
 
-#endif //LEVEL_MultiPlexer2
+#endif //LEVEL_TheGreatMachine

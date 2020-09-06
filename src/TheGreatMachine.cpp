@@ -23,7 +23,7 @@ inline void RemoveErase(Container* container, T value) {
 #include "generated/NandLevel.h"
 #include "generated/NorLevel.h"
 #include "generated/XnorLevel.h"
-#include "generated/NotLevel.h"
+#include "generated/Simple7Level.h"
 
 // ================ MediumLevels ================
 #include "generated/FullAdderLevel.h"
@@ -31,10 +31,10 @@ inline void RemoveErase(Container* container, T value) {
 #include "generated/Medium3Level.h"
 #include "generated/Medium4Level.h"
 #include "generated/Medium5Level.h"
+#include "generated/Medium6Level.h"
 
 // ================= HardLevels =================
 #include "generated/Hard1Level.h"
-#include "generated/Hard2Level.h"
 #include "generated/Hard3Level.h"
 #include "generated/MultiPlexer2Level.h"
 #include "generated/PrimesLevel.h"
@@ -104,7 +104,7 @@ class TheGreatMachine : public olc::PixelGameEngine
         Levels.push_back(new XnorLevel);
         Levels.back()->OnUserCreate(this);
         
-        Levels.push_back(new NotLevel);
+        Levels.push_back(new Simple7Level);
         Levels.back()->OnUserCreate(this);
         
         // ================ MediumLevels ================
@@ -123,12 +123,12 @@ class TheGreatMachine : public olc::PixelGameEngine
         Levels.push_back(new Medium5Level);
         Levels.back()->OnUserCreate(this);
         
+        Levels.push_back(new Medium6Level);
+        Levels.back()->OnUserCreate(this);
+        
         
         // ================= HardLevels =================
         Levels.push_back(new Hard1Level);
-        Levels.back()->OnUserCreate(this);
-        
-        Levels.push_back(new Hard2Level);
         Levels.back()->OnUserCreate(this);
         
         Levels.push_back(new Hard3Level);
@@ -137,9 +137,10 @@ class TheGreatMachine : public olc::PixelGameEngine
         Levels.push_back(new PrimesLevel);
         Levels.back()->OnUserCreate(this);
         
-        Levels.push_back(new MultiPlexer2Level);
+        Levels.push_back(new TheGreatMachineLevel);
         Levels.back()->OnUserCreate(this);
         
+        // =============== VeryHardLevels ===============
         Levels.push_back(new FizzBuzzLevel);
         Levels.back()->OnUserCreate(this);
         

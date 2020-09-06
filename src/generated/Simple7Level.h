@@ -1,15 +1,17 @@
 #ifndef LEVEL_Simple7
 #define LEVEL_Simple7
 
-struct BlackBoxNotB : public BlackBoxCircuitNode {
+struct BlackBoxSimple7 : public BlackBoxCircuitNode {
     /* Number of inputs: 2 */
-    /* Number of outputs: 1 */
+    /* Number of outputs: 2 */
 
     bool Evaluate(CircuitNode * callingParent) override {
         bool a = SafeEval(Input[0], this);
         bool b = SafeEval(Input[1], this);
         if (callingParent == parents[0]) {
-            return !b;
+            return a && (a != b);
+        } else if (callingParent == parents[1]) {
+            return b && (a != b);;
         } else {
             Assert(true);
             return false;
@@ -17,15 +19,15 @@ struct BlackBoxNotB : public BlackBoxCircuitNode {
     }
 };
 
-struct NotLevel : public Level {
+struct Simple7Level : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Simple 7\n(2 - 1)";
-        LevelCompleteName = "Simple 7\n(2 - 1)\nNot Gate (B)";
+        LevelName = "Simple 7\n(2 - 2)";
+        LevelCompleteName = "Simple 7\n(2 - 2)";
 
         int InputCenteringYOffset = 0;
-        int OutputCenteringYOffset = 1;
+        int OutputCenteringYOffset = 0;
 
         CircuitNodeBIT *Input1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         Input1->Held = false;
@@ -37,7 +39,7 @@ struct NotLevel : public Level {
         Input2->IsStatic = true;
         Input2->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (2 + InputCenteringYOffset)};
 
-        CircuitNode *BlackBox = new BlackBoxNotB();
+        CircuitNode *BlackBox = new BlackBoxSimple7();
         BlackBox->SpriteIndex = (int)LOGIC_NONE;
         BlackBox->IsStatic = true;
         BlackBox->pge = pge;
@@ -57,6 +59,14 @@ struct NotLevel : public Level {
         Output1->ConnectChild(BlackBox);
         editor.CircuitTrees.push_back(Output1);
 
+        CircuitNode *Output2 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        Output2->Held = false;
+        Output2->IsStatic = true;
+        Output2->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, (int)editor.IoComponentSize.y * (4 + OutputCenteringYOffset)};
+
+        Output2->ConnectChild(BlackBox);
+        editor.CircuitTrees.push_back(Output2);
+
         CircuitNodeBIT *UserInput1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         UserInput1->Held = false;
         UserInput1->IsStatic = true;
@@ -72,13 +82,20 @@ struct NotLevel : public Level {
         UserOutput1->IsStatic = true;
         UserOutput1->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (0 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
 
+        CircuitNode *UserOutput2 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        UserOutput2->Held = false;
+        UserOutput2->IsStatic = true;
+        UserOutput2->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (2 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
+
         editor.CircuitTrees.push_back(UserInput1);
         editor.CircuitTrees.push_back(UserInput2);
         editor.CircuitTrees.push_back(UserOutput1);
+        editor.CircuitTrees.push_back(UserOutput2);
 
         Inputs.push_back({Input1, UserInput1});
         Inputs.push_back({Input2, UserInput2});
         Outputs.push_back({Output1, UserOutput1});
+        Outputs.push_back({Output2, UserOutput2});
     }
 };
 
