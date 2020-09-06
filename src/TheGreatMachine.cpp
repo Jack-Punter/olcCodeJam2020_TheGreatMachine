@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "olcPixelGameEngine.h"
 #include <string.h>
 #include "pge/imgui_impl_pge.h"

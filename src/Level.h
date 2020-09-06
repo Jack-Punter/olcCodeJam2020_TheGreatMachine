@@ -153,7 +153,7 @@ struct Level {
         if (ShowLevelControls) {
             if (ImGui::Begin("Simulation")){
                 char levelText[128] = { 0 };
-                strcpy_s(levelText, 128, LevelName);
+                strcpy(levelText, LevelName);
                 for(int i = 0; i < strlen(levelText); ++i) {
                     if (levelText[i] == '\n') {
                         levelText[i] = ' ';
