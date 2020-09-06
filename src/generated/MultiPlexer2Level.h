@@ -12,23 +12,23 @@ struct BlackBoxMultiPlexer2 : public BlackBoxCircuitNode {
         bool d = SafeEval(Input[3], this);
         bool e = SafeEval(Input[4], this);
         bool f = SafeEval(Input[5], this);
-        int nSelect = (e?2:0) + (f?1:0);
+        int nSelect = (a?2:0) + (b?1:0);
         if (callingParent == parents[0]) {
             switch (nSelect) {
                 case 0: {
-                    return a;
-                } break;
-                
-                case 1: {
-                    return b;
-                } break;
-                
-                case 2: {
                     return c;
                 } break;
                 
-                case 3: {
+                case 1: {
                     return d;
+                } break;
+                
+                case 2: {
+                    return e;
+                } break;
+                
+                case 3: {
+                    return f;
                 } break;
                 
                 default: {
@@ -48,8 +48,8 @@ struct MultiPlexer2Level : public Level {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
         
-        LevelName = "Hard 5: The\nGreat Machine";
-        LevelCompleteName = "Hard 5: The\nGreat Machine\nMulti Plexer 2";
+        LevelName = "Very Hard 1:\nThe Great Machine";
+        LevelCompleteName = "Very Hard 1:\nThe Great Machine\nMulti Plexer 2";
         
         int InputCenteringYOffset = 0;
         int OutputCenteringYOffset = 5;

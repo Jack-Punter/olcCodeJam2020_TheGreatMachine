@@ -28,7 +28,7 @@ struct Level {
     virtual std::pair<bool, bool> AsyncValidateGen()
     {
         for(uint64_t i = 0; i < Inputs.size(); ++i) {
-            bool ThisInput = AysncValidateCounter & (1LL << (Inputs.size() - i - 1));
+            bool ThisInput = AysncValidateCounter & (1ll << (Inputs.size() - i - 1));
             Inputs[i].first->value = ThisInput;
             Inputs[i].second->value = ThisInput;
         }
