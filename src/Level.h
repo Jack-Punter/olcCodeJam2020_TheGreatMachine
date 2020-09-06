@@ -225,8 +225,8 @@ struct SandboxLevel : public Level
     {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Sandbox Level";
-        LevelCompleteName = "Sandbox Level";
+        LevelName = "Sandbox";
+        LevelCompleteName = "Sandbox";
     }
     void OnUserUpdate(float fElapsedTime) override
     {

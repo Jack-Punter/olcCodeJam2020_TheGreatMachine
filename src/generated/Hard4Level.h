@@ -1,20 +1,31 @@
-#ifndef LEVEL_FizzBuzz
-#define LEVEL_FizzBuzz
+#ifndef LEVEL_Hard4
+#define LEVEL_Hard4
 
-struct BlackBoxFizzBuzz : public BlackBoxCircuitNode {
-    /* Number of inputs: 4 */
-    /* Number of outputs: 2 */
+struct BlackBoxHard4 : public BlackBoxCircuitNode {
+    /* Number of inputs: 3 */
+    /* Number of outputs: 6 */
     
     bool Evaluate(CircuitNode * callingParent) override {
         bool a = SafeEval(Input[0], this);
         bool b = SafeEval(Input[1], this);
         bool c = SafeEval(Input[2], this);
-        bool d = SafeEval(Input[3], this);
-        int n = (a?8:0) + (b?4:0) + (c?2:0) + (d?1:0);
+        
+        bool out1 = a != b;
+        bool out2 = !a || (c && b);
+        bool out3 = b == c;
+        
         if (callingParent == parents[0]) {
-            return n!=0 && n%3==0;
+            return out1;
         } else if (callingParent == parents[1]) {
-            return n!=0 && n%5==0;
+            return (out2 != out3) == out1;
+        } else if (callingParent == parents[2]) {
+            return out2;
+        } else if (callingParent == parents[3]) {
+            return !(out3 && out1);
+        } else if (callingParent == parents[4]) {
+            return out3;
+        } else if (callingParent == parents[5]) {
+            return out2 || out3;
         } else {
             Assert(true);
             return false;
@@ -22,15 +33,15 @@ struct BlackBoxFizzBuzz : public BlackBoxCircuitNode {
     }
 };
 
-struct FizzBuzzLevel : public Level {
+struct Hard4Level : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Very Hard 3:\nImpossible";
-        LevelCompleteName = "Very Hard 3\nImpossible\nFizzBuzz";
+        LevelName = "Hard 4\n(3 - 6)";
+        LevelCompleteName = "Hard 4\n(3 - 6)";
         
-        int InputCenteringYOffset = 0;
-        int OutputCenteringYOffset = 2;
+        int InputCenteringYOffset = 3;
+        int OutputCenteringYOffset = 0;
         
         CircuitNodeBIT *Input1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         Input1->Held = false;
@@ -47,16 +58,11 @@ struct FizzBuzzLevel : public Level {
         Input3->IsStatic = true;
         Input3->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (4 + InputCenteringYOffset)};
         
-        CircuitNodeBIT *Input4 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        Input4->Held = false;
-        Input4->IsStatic = true;
-        Input4->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (6 + InputCenteringYOffset)};
-        
-        CircuitNode *BlackBox = new BlackBoxFizzBuzz();
+        CircuitNode *BlackBox = new BlackBoxHard4();
         BlackBox->SpriteIndex = (int)LOGIC_NONE;
         BlackBox->IsStatic = true;
         BlackBox->pge = pge;
-        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), (Input1->pos.y + (Input4->pos.y + 2 * (int)Input4->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y};
+        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), (Input1->pos.y + (Input3->pos.y + 2 * (int)Input3->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y};
         BlackBox->SpriteSheet = editor.LogicComponentRenderable;
         BlackBox->SpriteSize = editor.LogicComponentSize;
         BlackBox->Held = false;
@@ -64,7 +70,6 @@ struct FizzBuzzLevel : public Level {
         BlackBox->ConnectChild(Input1);
         BlackBox->ConnectChild(Input2);
         BlackBox->ConnectChild(Input3);
-        BlackBox->ConnectChild(Input4);
         
         CircuitNode *Output1 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
         Output1->Held = false;
@@ -82,6 +87,38 @@ struct FizzBuzzLevel : public Level {
         Output2->ConnectChild(BlackBox);
         editor.CircuitTrees.push_back(Output2);
         
+        CircuitNode *Output3 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        Output3->Held = false;
+        Output3->IsStatic = true;
+        Output3->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, (int)editor.IoComponentSize.y * (6 + OutputCenteringYOffset)};
+        
+        Output3->ConnectChild(BlackBox);
+        editor.CircuitTrees.push_back(Output3);
+        
+        CircuitNode *Output4 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        Output4->Held = false;
+        Output4->IsStatic = true;
+        Output4->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, (int)editor.IoComponentSize.y * (8 + OutputCenteringYOffset)};
+        
+        Output4->ConnectChild(BlackBox);
+        editor.CircuitTrees.push_back(Output4);
+        
+        CircuitNode *Output5 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        Output5->Held = false;
+        Output5->IsStatic = true;
+        Output5->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, (int)editor.IoComponentSize.y * (10 + OutputCenteringYOffset)};
+        
+        Output5->ConnectChild(BlackBox);
+        editor.CircuitTrees.push_back(Output5);
+        
+        CircuitNode *Output6 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        Output6->Held = false;
+        Output6->IsStatic = true;
+        Output6->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, (int)editor.IoComponentSize.y * (12 + OutputCenteringYOffset)};
+        
+        Output6->ConnectChild(BlackBox);
+        editor.CircuitTrees.push_back(Output6);
+        
         CircuitNodeBIT *UserInput1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         UserInput1->Held = false;
         UserInput1->IsStatic = true;
@@ -97,11 +134,6 @@ struct FizzBuzzLevel : public Level {
         UserInput3->IsStatic = true;
         UserInput3->pos = {(2 * (int)editor.IoComponentSize.x), pge->ScreenHeight() / 2 + (4 + InputCenteringYOffset) * (int)editor.IoComponentSize.y};
         
-        CircuitNodeBIT *UserInput4 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        UserInput4->Held = false;
-        UserInput4->IsStatic = true;
-        UserInput4->pos = {(2 * (int)editor.IoComponentSize.x), pge->ScreenHeight() / 2 + (6 + InputCenteringYOffset) * (int)editor.IoComponentSize.y};
-        
         CircuitNode *UserOutput1 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
         UserOutput1->Held = false;
         UserOutput1->IsStatic = true;
@@ -112,20 +144,46 @@ struct FizzBuzzLevel : public Level {
         UserOutput2->IsStatic = true;
         UserOutput2->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (2 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
         
+        CircuitNode *UserOutput3 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        UserOutput3->Held = false;
+        UserOutput3->IsStatic = true;
+        UserOutput3->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (4 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
+        
+        CircuitNode *UserOutput4 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        UserOutput4->Held = false;
+        UserOutput4->IsStatic = true;
+        UserOutput4->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (6 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
+        
+        CircuitNode *UserOutput5 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        UserOutput5->Held = false;
+        UserOutput5->IsStatic = true;
+        UserOutput5->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (8 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
+        
+        CircuitNode *UserOutput6 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
+        UserOutput6->Held = false;
+        UserOutput6->IsStatic = true;
+        UserOutput6->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (10 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
+        
         editor.CircuitTrees.push_back(UserInput1);
         editor.CircuitTrees.push_back(UserInput2);
         editor.CircuitTrees.push_back(UserInput3);
-        editor.CircuitTrees.push_back(UserInput4);
         editor.CircuitTrees.push_back(UserOutput1);
         editor.CircuitTrees.push_back(UserOutput2);
+        editor.CircuitTrees.push_back(UserOutput3);
+        editor.CircuitTrees.push_back(UserOutput4);
+        editor.CircuitTrees.push_back(UserOutput5);
+        editor.CircuitTrees.push_back(UserOutput6);
         
         Inputs.push_back({Input1, UserInput1});
         Inputs.push_back({Input2, UserInput2});
         Inputs.push_back({Input3, UserInput3});
-        Inputs.push_back({Input4, UserInput4});
         Outputs.push_back({Output1, UserOutput1});
         Outputs.push_back({Output2, UserOutput2});
+        Outputs.push_back({Output3, UserOutput3});
+        Outputs.push_back({Output4, UserOutput4});
+        Outputs.push_back({Output5, UserOutput5});
+        Outputs.push_back({Output6, UserOutput6});
     }
 };
 
-#endif //LEVEL_FizzBuzz
+#endif //LEVEL_Hard4

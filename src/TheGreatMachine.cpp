@@ -32,12 +32,16 @@ inline void RemoveErase(Container* container, T value) {
 #include "generated/Medium4Level.h"
 #include "generated/Medium5Level.h"
 #include "generated/Medium6Level.h"
+#include "generated/Medium7Level.h"
 
 // ================= HardLevels =================
 #include "generated/Hard1Level.h"
+#include "generated/Hard2Level.h"
 #include "generated/Hard3Level.h"
+#include "generated/Hard4Level.h"
+
+// =============== VeryHardLevels ===============
 #include "generated/MultiPlexer2Level.h"
-#include "generated/PrimesLevel.h"
 #include "generated/FizzBuzzLevel.h"
 
 #include <algorithm>
@@ -126,21 +130,26 @@ class TheGreatMachine : public olc::PixelGameEngine
         Levels.push_back(new Medium6Level);
         Levels.back()->OnUserCreate(this);
         
+        Levels.push_back(new Medium7Level);
+        Levels.back()->OnUserCreate(this);
         
         // ================= HardLevels =================
         Levels.push_back(new Hard1Level);
         Levels.back()->OnUserCreate(this);
         
+        Levels.push_back(new Hard2Level);
+        Levels.back()->OnUserCreate(this);
+        
         Levels.push_back(new Hard3Level);
         Levels.back()->OnUserCreate(this);
         
-        Levels.push_back(new PrimesLevel);
-        Levels.back()->OnUserCreate(this);
-        
-        Levels.push_back(new TheGreatMachineLevel);
+        Levels.push_back(new Hard4Level);
         Levels.back()->OnUserCreate(this);
         
         // =============== VeryHardLevels ===============
+        Levels.push_back(new TheGreatMachineLevel);
+        Levels.back()->OnUserCreate(this);
+        
         Levels.push_back(new FizzBuzzLevel);
         Levels.back()->OnUserCreate(this);
         

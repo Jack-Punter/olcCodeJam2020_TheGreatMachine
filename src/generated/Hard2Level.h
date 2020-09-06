@@ -1,9 +1,9 @@
-#ifndef LEVEL_FizzBuzz
-#define LEVEL_FizzBuzz
+#ifndef LEVEL_Hard2
+#define LEVEL_Hard2
 
-struct BlackBoxFizzBuzz : public BlackBoxCircuitNode {
+struct BlackBoxHard2 : public BlackBoxCircuitNode {
     /* Number of inputs: 4 */
-    /* Number of outputs: 2 */
+    /* Number of outputs: 1 */
     
     bool Evaluate(CircuitNode * callingParent) override {
         bool a = SafeEval(Input[0], this);
@@ -12,9 +12,7 @@ struct BlackBoxFizzBuzz : public BlackBoxCircuitNode {
         bool d = SafeEval(Input[3], this);
         int n = (a?8:0) + (b?4:0) + (c?2:0) + (d?1:0);
         if (callingParent == parents[0]) {
-            return n!=0 && n%3==0;
-        } else if (callingParent == parents[1]) {
-            return n!=0 && n%5==0;
+            return n==2 || n==3 || n==5 || n==7 || n==11 || n==13;
         } else {
             Assert(true);
             return false;
@@ -22,15 +20,15 @@ struct BlackBoxFizzBuzz : public BlackBoxCircuitNode {
     }
 };
 
-struct FizzBuzzLevel : public Level {
+struct Hard2Level : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Very Hard 3:\nImpossible";
-        LevelCompleteName = "Very Hard 3\nImpossible\nFizzBuzz";
+        LevelName = "Hard 4\n(4 - 1)";
+        LevelCompleteName = "Hard 4\n(4 - 1)\nPrimes";
         
         int InputCenteringYOffset = 0;
-        int OutputCenteringYOffset = 2;
+        int OutputCenteringYOffset = 3;
         
         CircuitNodeBIT *Input1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         Input1->Held = false;
@@ -52,7 +50,7 @@ struct FizzBuzzLevel : public Level {
         Input4->IsStatic = true;
         Input4->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (6 + InputCenteringYOffset)};
         
-        CircuitNode *BlackBox = new BlackBoxFizzBuzz();
+        CircuitNode *BlackBox = new BlackBoxHard2();
         BlackBox->SpriteIndex = (int)LOGIC_NONE;
         BlackBox->IsStatic = true;
         BlackBox->pge = pge;
@@ -73,14 +71,6 @@ struct FizzBuzzLevel : public Level {
         
         Output1->ConnectChild(BlackBox);
         editor.CircuitTrees.push_back(Output1);
-        
-        CircuitNode *Output2 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
-        Output2->Held = false;
-        Output2->IsStatic = true;
-        Output2->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, (int)editor.IoComponentSize.y * (4 + OutputCenteringYOffset)};
-        
-        Output2->ConnectChild(BlackBox);
-        editor.CircuitTrees.push_back(Output2);
         
         CircuitNodeBIT *UserInput1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         UserInput1->Held = false;
@@ -107,25 +97,18 @@ struct FizzBuzzLevel : public Level {
         UserOutput1->IsStatic = true;
         UserOutput1->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (0 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
         
-        CircuitNode *UserOutput2 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
-        UserOutput2->Held = false;
-        UserOutput2->IsStatic = true;
-        UserOutput2->pos = {pge->ScreenWidth() - 300 - 4 * (int)editor.IoComponentSize.x, pge->ScreenHeight() / 2 + (2 + OutputCenteringYOffset) * (int)editor.IoComponentSize.y};
-        
         editor.CircuitTrees.push_back(UserInput1);
         editor.CircuitTrees.push_back(UserInput2);
         editor.CircuitTrees.push_back(UserInput3);
         editor.CircuitTrees.push_back(UserInput4);
         editor.CircuitTrees.push_back(UserOutput1);
-        editor.CircuitTrees.push_back(UserOutput2);
         
         Inputs.push_back({Input1, UserInput1});
         Inputs.push_back({Input2, UserInput2});
         Inputs.push_back({Input3, UserInput3});
         Inputs.push_back({Input4, UserInput4});
         Outputs.push_back({Output1, UserOutput1});
-        Outputs.push_back({Output2, UserOutput2});
     }
 };
 
-#endif //LEVEL_FizzBuzz
+#endif //LEVEL_Hard2

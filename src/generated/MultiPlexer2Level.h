@@ -48,8 +48,8 @@ struct TheGreatMachineLevel : public Level {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
         
-        LevelName = "Very Hard 1:\nThe Great Machine";
-        LevelCompleteName = "Very Hard 1:\nThe Great Machine\nMulti Plexer 2";
+        LevelName = "Very Hard 2:\nThe Great Machine";
+        LevelCompleteName = "Very Hard 2:\nThe Great Machine\nMulti Plexer 2";
         
         int InputCenteringYOffset = 0;
         int OutputCenteringYOffset = 5;
