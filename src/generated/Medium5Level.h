@@ -1,8 +1,8 @@
-#ifndef LEVEL_Medium2
-#define LEVEL_Medium2
+#ifndef LEVEL_Medium5
+#define LEVEL_Medium5
 
 struct BlackBoxMedium5 : public BlackBoxCircuitNode {
-    /* Number of inputs: 6 */
+    /* Number of inputs: 5 */
     /* Number of outputs: 5 */
 
     bool Evaluate(CircuitNode * callingParent) override {
@@ -11,10 +11,9 @@ struct BlackBoxMedium5 : public BlackBoxCircuitNode {
         bool c = SafeEval(Input[2], this);
         bool d = SafeEval(Input[3], this);
         bool e = SafeEval(Input[4], this);
-        bool f = SafeEval(Input[5], this);
         bool out1 = a && b;
         bool out3 = (c != d);
-        bool out5 = e || f;
+        bool out5 = d || e;        
         if (callingParent == parents[0]) {
             return out1;
         } else if (callingParent == parents[1]) {
@@ -36,11 +35,11 @@ struct Medium5Level : public Level {
     void OnUserCreate(olc::PixelGameEngine *_pge) {
         Level::OnUserCreate(_pge);
         editor.OnUserCreate(_pge);
-        LevelName = "Medium 5\n(6 - 5)";
-        LevelCompleteName = "Medium 5\n(6 - 5)";
+        LevelName = "Medium 5\n(5 - 5)";
+        LevelCompleteName = "Medium 5\n(5 - 5)\nMedium5";
 
         int InputCenteringYOffset = 0;
-        int OutputCenteringYOffset = 1;
+        int OutputCenteringYOffset = 0;
 
         CircuitNodeBIT *Input1 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
         Input1->Held = false;
@@ -67,16 +66,11 @@ struct Medium5Level : public Level {
         Input5->IsStatic = true;
         Input5->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (8 + InputCenteringYOffset)};
 
-        CircuitNodeBIT *Input6 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        Input6->Held = false;
-        Input6->IsStatic = true;
-        Input6->pos = (2 * editor.IoComponentSize) + olc::vi2d{0, (int)editor.IoComponentSize.y * (10 + InputCenteringYOffset)};
-
         CircuitNode *BlackBox = new BlackBoxMedium5();
         BlackBox->SpriteIndex = (int)LOGIC_NONE;
         BlackBox->IsStatic = true;
         BlackBox->pge = pge;
-        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), (Input1->pos.y + (Input6->pos.y + 2 * (int)Input6->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y};
+        BlackBox->pos = {((pge->ScreenWidth() - 300) / 2 - (int)editor.LogicComponentSize.x), (Input1->pos.y + (Input5->pos.y + 2 * (int)Input5->SpriteSize.y)) / 2 - (int)editor.LogicComponentSize.y};
         BlackBox->SpriteSheet = editor.LogicComponentRenderable;
         BlackBox->SpriteSize = editor.LogicComponentSize;
         BlackBox->Held = false;
@@ -86,7 +80,6 @@ struct Medium5Level : public Level {
         BlackBox->ConnectChild(Input3);
         BlackBox->ConnectChild(Input4);
         BlackBox->ConnectChild(Input5);
-        BlackBox->ConnectChild(Input6);
 
         CircuitNode *Output1 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
         Output1->Held = false;
@@ -153,11 +146,6 @@ struct Medium5Level : public Level {
         UserInput5->IsStatic = true;
         UserInput5->pos = {(2 * (int)editor.IoComponentSize.x), pge->ScreenHeight() / 2 + (8 + InputCenteringYOffset) * (int)editor.IoComponentSize.y};
 
-        CircuitNodeBIT *UserInput6 = (CircuitNodeBIT *)CreateHeldNode<IoCircuitNode>(_pge, IO_BIT, editor.IoComponentSize, editor.IoComponentRenderable);
-        UserInput6->Held = false;
-        UserInput6->IsStatic = true;
-        UserInput6->pos = {(2 * (int)editor.IoComponentSize.x), pge->ScreenHeight() / 2 + (10 + InputCenteringYOffset) * (int)editor.IoComponentSize.y};
-
         CircuitNode *UserOutput1 = CreateHeldNode<IoCircuitNode>(_pge, IO_LED, editor.IoComponentSize, editor.IoComponentRenderable);
         UserOutput1->Held = false;
         UserOutput1->IsStatic = true;
@@ -188,7 +176,6 @@ struct Medium5Level : public Level {
         editor.CircuitTrees.push_back(UserInput3);
         editor.CircuitTrees.push_back(UserInput4);
         editor.CircuitTrees.push_back(UserInput5);
-        editor.CircuitTrees.push_back(UserInput6);
         editor.CircuitTrees.push_back(UserOutput1);
         editor.CircuitTrees.push_back(UserOutput2);
         editor.CircuitTrees.push_back(UserOutput3);
@@ -200,7 +187,6 @@ struct Medium5Level : public Level {
         Inputs.push_back({Input3, UserInput3});
         Inputs.push_back({Input4, UserInput4});
         Inputs.push_back({Input5, UserInput5});
-        Inputs.push_back({Input6, UserInput6});
         Outputs.push_back({Output1, UserOutput1});
         Outputs.push_back({Output2, UserOutput2});
         Outputs.push_back({Output3, UserOutput3});
@@ -209,4 +195,4 @@ struct Medium5Level : public Level {
     }
 };
 
-#endif //LEVEL_Medium2
+#endif //LEVEL_Medium5
