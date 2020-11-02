@@ -25,3 +25,7 @@ The generated file will be placed into `src/generated/`
 
 # Data Desk
 All files found in the data_desk folder are courtesy of Ryan Fleury: https://github.com/ryanfleury/data_desk
+
+# Placed 12th out of 108
+Thanks for playing!
+https://itch.io/jam/olc-codejam-2020/results
